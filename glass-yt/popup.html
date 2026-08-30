@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Glass YT</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main class="popup-shell" aria-labelledby="popup-title">
+      <div class="ambient ambient-one" aria-hidden="true"></div>
+      <div class="ambient ambient-two" aria-hidden="true"></div>
+
+      <header class="brand">
+        <span class="brand-mark" aria-hidden="true"><span class="play-glyph"></span></span>
+        <div><h1 id="popup-title">Glass YT <small>v2.5</small></h1><p>Liquid glass for YouTube</p></div>
+        <button id="advanced-button" class="advanced-button" type="button" title="Open advanced settings" aria-label="Open advanced settings">↗</button>
+      </header>
+
+      <section class="control-card" aria-label="Glass mode setting">
+        <div class="control-copy"><span class="mode-dot" aria-hidden="true"></span><div><span class="control-label">Glass Mode</span><span class="control-hint">Visual-only redesign</span></div></div>
+        <label class="switch"><input id="enabled-toggle" type="checkbox" role="switch" aria-label="Toggle Glass Mode"><span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span></label>
+      </section>
+
+      <section class="quick-card" aria-label="Quick appearance settings">
+        <div class="section-heading"><span>Quick appearance</span><span class="live-pill">Live</span></div>
+        <label class="select-row" for="theme-select"><span class="setting-name">Theme</span><select id="theme-select" class="tint-select"></select></label>
+        <label class="select-row" for="logo-select"><span class="setting-name">YouTube logo</span><select id="logo-select" class="tint-select"><option value="original">Original</option><option value="theme">Theme color</option><option value="glass">Glass</option><option value="monochrome">Monochrome</option><option value="gradient">Gradient</option></select></label>
+        <label class="setting-row" for="intensity-range"><span class="setting-name">Glass strength <output id="intensity-value">32%</output></span><input id="intensity-range" class="range" type="range" min="0" max="100" value="32"></label>
+        <label class="setting-row" for="transparency-range"><span class="setting-name">Transparency <output id="transparency-value">68%</output></span><input id="transparency-range" class="range" type="range" min="0" max="100" value="68"></label>
+        <label class="setting-row" for="blur-range"><span class="setting-name">Blur <output id="blur-value">24px</output></span><input id="blur-range" class="range" type="range" min="0" max="50" value="24"></label>
+        <label class="color-row" for="custom-color"><span class="setting-name">Custom color</span><span class="color-control"><input id="custom-color" type="color" value="#8ab4ff"><input id="custom-hex" type="text" value="#8AB4FF" aria-label="Custom color HEX" pattern="^#[0-9a-fA-F]{6}$"></span></label>
+      </section>
+
+      <button id="settings-button" class="settings-button" type="button">Open advanced settings <span>→</span></button>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+      <p id="site-note" class="site-note" hidden>Open YouTube to preview the changes.</p>
+    </main>
+    <script src="config.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

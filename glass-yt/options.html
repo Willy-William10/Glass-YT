@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Glass YT Settings</title><link rel="stylesheet" href="options.css"></head>
+  <body>
+    <div class="page-glow glow-a" aria-hidden="true"></div><div class="page-glow glow-b" aria-hidden="true"></div>
+    <main class="settings-page">
+    <header class="page-header"><div class="brand-mark" aria-hidden="true"><span class="play-glyph"></span></div><div><p class="eyebrow">Glass YT · v2.5</p><h1>Liquid Glass Settings</h1><p class="subtitle">Tune the entire YouTube surface. Changes are saved and previewed live.</p></div><button id="reset-button" class="ghost-button" type="button">Reset</button></header>
+
+      <section class="settings-section"><div class="section-title"><h2>Appearance</h2><p>Make the glass feel clear, soft, or dimensional.</p></div><div class="settings-grid">
+        <label class="field field-wide"><span>Theme color</span><select id="theme" class="control"></select></label>
+        <label class="field"><span>Custom color <output id="custom-color-value">#8AB4FF</output></span><div class="color-line"><input id="customColor" class="color-input" type="color" value="#8ab4ff"><input id="customColorHex" class="control hex-input" type="text" value="#8AB4FF" pattern="^#[0-9a-fA-F]{6}$" aria-label="Custom color HEX"></div></label>
+        <label class="field"><span>Glass intensity <output id="glassIntensity-value"></output></span><input id="glassIntensity" class="range" type="range" min="0" max="100" value="32"></label>
+        <label class="field"><span>Transparency <output id="transparency-value"></output></span><input id="transparency" class="range" type="range" min="0" max="100" value="68"></label>
+        <label class="field"><span>Blur <output id="blur-value"></output></span><input id="blur" class="range" type="range" min="0" max="50" value="24"></label>
+        <label class="field"><span>Glass border <output id="borderIntensity-value"></output></span><input id="borderIntensity" class="range" type="range" min="0" max="100" value="32"></label>
+        <label class="field"><span>Shadow <output id="shadowIntensity-value"></output></span><input id="shadowIntensity" class="range" type="range" min="0" max="100" value="26"></label>
+        <label class="field"><span>Corner radius <output id="radius-value"></output></span><input id="radius" class="range" type="range" min="0" max="32" value="18"></label>
+        <label class="field"><span>Category chip style</span><select id="chipStyle" class="control"><option value="minimal">Text only</option><option value="soft">Soft pill</option><option value="glass">Glass pill</option></select></label>
+        <label class="field"><span>Ambient glow</span><select id="ambientGlow" class="control"><option value="off">Off</option><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select></label>
+        <label class="field"><span>Reflection intensity <output id="reflectionIntensity-value"></output></span><input id="reflectionIntensity" class="range" type="range" min="0" max="100" value="18"></label>
+      </div></section>
+
+      <section class="settings-section"><div class="section-title"><h2>Typography</h2><p>Use a local font when installed; the browser falls back gracefully.</p></div><div class="settings-grid">
+        <label class="field field-wide"><span>Page font <small>Search the 100-font catalog</small></span><input id="font" class="control" list="font-options" value="Inter" autocomplete="off"><datalist id="font-options"></datalist></label>
+        <label class="field"><span>Typography preset</span><select id="typographyPreset" class="control"><option value="youtube">YouTube Default</option><option value="modern">Modern</option><option value="minimal">Minimal</option><option value="elegant">Elegant</option><option value="futuristic">Futuristic</option><option value="gaming">Gaming</option><option value="soft">Soft</option><option value="professional">Professional</option><option value="arabic">Arabic Friendly</option></select></label>
+        <label class="field"><span>Font weight <output id="fontWeight-value"></output></span><input id="fontWeight" class="range" type="range" min="100" max="900" step="100" value="500"></label>
+        <label class="field"><span>Font size <output id="fontSize-value"></output></span><input id="fontSize" class="range" type="range" min="80" max="120" value="100"></label>
+        <label class="field"><span>Letter spacing <output id="letterSpacing-value"></output></span><input id="letterSpacing" class="range" type="range" min="-2" max="8" step="1" value="0"></label>
+        <label class="field"><span>Line height <output id="lineHeight-value"></output></span><input id="lineHeight" class="range" type="range" min="1" max="2" step=".05" value="1.35"></label>
+      </div></section>
+
+      <section class="settings-section"><div class="section-title"><h2>Animations</h2><p>Keep the interface alive without distracting motion.</p></div><div class="settings-grid">
+        <label class="field"><span>Animation speed</span><select id="animationSpeed" class="control"><option value="off">Off</option><option value="slow">Slow</option><option value="normal">Normal</option><option value="fast">Fast</option></select><small class="field-help">Sets the pace of small interface movements.</small></label>
+        <label class="field"><span>Reflection speed</span><select id="reflectionSpeed" class="control"><option value="slow">Slow</option><option value="normal">Normal</option><option value="fast">Fast</option></select><small class="field-help">Controls how quickly the optional glass highlight moves.</small></label>
+        <label class="toggle-field toggle-field-help"><input id="hoverEffects" type="checkbox"><span><strong>Hover effects</strong><small>Adds a gentle lift and highlight to the whole video item.</small></span></label><label class="toggle-field toggle-field-help"><input id="reflection" type="checkbox"><span><strong>Liquid reflection</strong><small>Adds a soft static highlight to main glass surfaces.</small></span></label><label class="toggle-field toggle-field-help"><input id="animatedGlow" type="checkbox"><span><strong>Animated glow sweep</strong><small>Lets the reflection move slowly across glass surfaces.</small></span></label>
+      </div></section>
+
+      <section class="settings-section"><div class="section-title"><h2>YouTube</h2><p>Choose how the major native surfaces respond to your theme.</p></div><div class="settings-grid">
+        <label class="field"><span>Logo style</span><select id="logoStyle" class="control"><option value="original">Original</option><option value="theme">Theme Color</option><option value="glass">Glass</option><option value="monochrome">Monochrome</option><option value="gradient">Gradient</option></select></label>
+        <label class="field"><span>Header style</span><select id="headerStyle" class="control"><option value="floating">Floating glass</option><option value="minimal">Minimal edge</option></select></label>
+        <label class="field"><span>Sidebar style</span><select id="sidebarStyle" class="control"><option value="minimal">Minimal glass</option><option value="glass">Soft glass</option><option value="clear">Clear</option></select></label>
+        <label class="field"><span>Card style</span><select id="cardStyle" class="control"><option value="soft">Soft glass</option><option value="floating">Floating</option><option value="clear">Clear</option></select></label>
+        <label class="field"><span>Button style</span><select id="buttonStyle" class="control"><option value="glass">Glass</option><option value="solid">Solid accent</option><option value="gradient">Gradient</option><option value="outline">Outline</option></select></label>
+        <label class="field"><span>Subscribe style</span><select id="subscribeStyle" class="control"><option value="glass">Glass</option><option value="solid">Solid accent</option><option value="gradient">Gradient</option><option value="outline">Outline</option></select></label>
+        <label class="field"><span>Player style</span><select id="playerStyle" class="control"><option value="premium">Premium</option><option value="soft">Soft</option><option value="minimal">Minimal</option></select><small class="field-help">Styles the player frame only; videos always stay sharp.</small></label>
+        <label class="toggle-field toggle-field-help"><input id="adBlocker" type="checkbox"><span><strong>Ad Blocker</strong><small>Blocks visible YouTube ads where possible. Some video ads may still use YouTube’s own skip control.</small></span></label>
+      </div></section>
+
+      <section class="settings-section"><div class="section-title"><h2>Performance & accessibility</h2><p>Keep effects respectful of the device and the viewer.</p></div><div class="settings-grid">
+        <label class="toggle-field toggle-field-help"><input id="gpuOptimizations" type="checkbox"><span><strong>Performance mode</strong><small>Keeps effects lightweight for smoother playback on slower devices.</small></span></label><label class="toggle-field toggle-field-help"><input id="reduceAnimations" type="checkbox"><span><strong>Reduce animations</strong><small>Uses less motion to make the interface feel calmer and faster.</small></span></label><label class="toggle-field toggle-field-help"><input id="disableAmbient" type="checkbox"><span><strong>Disable ambient glow</strong><small>Turns off background color glow to reduce visual activity.</small></span></label><label class="toggle-field toggle-field-help"><input id="disableReflections" type="checkbox"><span><strong>Disable reflections</strong><small>Removes the extra highlight from glass surfaces.</small></span></label><label class="toggle-field toggle-field-help"><input id="highContrast" type="checkbox"><span><strong>High contrast</strong><small>Strengthens text separation for easier reading.</small></span></label><label class="toggle-field toggle-field-help"><input id="strongFocus" type="checkbox"><span><strong>Strong focus indicators</strong><small>Makes keyboard focus easier to see across YouTube.</small></span></label>
+      </div></section>
+      <p id="save-status" class="save-status" role="status" aria-live="polite">All changes save automatically.</p>
+    </main>
+    <script src="config.js"></script><script src="options.js"></script>
+  </body>
+</html>

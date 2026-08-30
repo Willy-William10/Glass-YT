@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <defs>
+    <radialGradient id="orb" cx="0" cy="0" r="1" gradientTransform="matrix(0 67 -67 0 43 27)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9CB2D9"/>
+      <stop offset=".46" stop-color="#6F88B5"/>
+      <stop offset="1" stop-color="#40577F"/>
+    </radialGradient>
+    <linearGradient id="rim" x1="25" y1="18" x2="103" y2="112" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D9E6FF" stop-opacity=".9"/>
+      <stop offset=".48" stop-color="#AFC5EE" stop-opacity=".72"/>
+      <stop offset="1" stop-color="#87A2D3" stop-opacity=".86"/>
+    </linearGradient>
+    <filter id="shadow" x="-25%" y="-25%" width="150%" height="155%"><feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#18253B" flood-opacity=".38"/></filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <circle cx="64" cy="64" r="53" fill="url(#orb)" stroke="url(#rim)" stroke-width="2"/>
+    <circle cx="64" cy="64" r="50" stroke="white" stroke-opacity=".14"/>
+    <path d="M52 42.6C52 39.3 55.6 37.2 58.5 38.9L89.5 56.8C92.4 58.5 92.4 62.7 89.5 64.4L58.5 82.3C55.6 84 52 81.9 52 78.6V42.6Z" fill="white"/>
+  </g>
+</svg>

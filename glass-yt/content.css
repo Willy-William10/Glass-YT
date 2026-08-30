@@ -1,0 +1,1822 @@
+/* ========================================================================
+   Glass YT — visual-only YouTube skin
+   Every rule is gated by [data-glass-yt="enabled"]. Removing that attribute
+   immediately restores the native YouTube presentation.
+   ======================================================================== */
+
+/* 1. Global -------------------------------------------------------------- */
+:root[data-glass-yt="enabled"] {
+  --gyt-bg: rgba(14, 19, 33, .38);
+  --gyt-bg-soft: rgba(29, 36, 56, .25);
+  --gyt-bg-strong: rgba(34, 42, 64, .48);
+  --gyt-bg-hover: rgba(160, 192, 255, .13);
+  --gyt-border: rgba(230, 241, 255, .16);
+  --gyt-border-bright: rgba(235, 245, 255, .31);
+  --gyt-text: #f4f7ff;
+  --gyt-muted: rgba(230, 237, 252, .74);
+  --gyt-accent: #a9c8ff;
+  --gyt-accent-strong: #82a9ff;
+  --gyt-shadow: 0 12px 34px rgba(1, 6, 18, .27), 0 2px 9px rgba(1, 6, 18, .13);
+  --gyt-shadow-lift: 0 18px 42px rgba(1, 6, 18, .38), 0 4px 11px rgba(1, 6, 18, .16);
+  --gyt-radius: 18px;
+  --gyt-radius-small: 12px;
+  --gyt-blur: blur(22px) saturate(155%);
+  --gyt-blur-heavy: blur(30px) saturate(170%);
+  --gyt-transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease, filter 180ms ease;
+  --yt-spec-base-background: transparent;
+  --yt-spec-raised-background: rgba(28, 34, 52, .48);
+  --yt-spec-menu-background: rgba(27, 33, 51, .60);
+  --yt-spec-additive-background: rgba(235, 243, 255, .11);
+  --yt-spec-text-primary: var(--gyt-text);
+  --yt-spec-text-secondary: var(--gyt-muted);
+  --yt-spec-brand-background-solid: rgba(25, 31, 48, .88);
+  --yt-spec-badge-chip-background: rgba(205, 221, 255, .13);
+  --yt-spec-button-chip-background-hover: rgba(180, 207, 255, .22);
+}
+
+:root[data-glass-yt="enabled"] body,
+:root[data-glass-yt="enabled"] ytd-app,
+:root[data-glass-yt="enabled"] #content.ytd-app,
+:root[data-glass-yt="enabled"] ytd-page-manager {
+  background:
+    radial-gradient(900px 560px at -4% -3%, rgba(76, 117, 210, .20), transparent 65%),
+    radial-gradient(750px 520px at 103% 12%, rgba(91, 198, 210, .11), transparent 65%),
+    radial-gradient(760px 640px at 52% 102%, rgba(108, 92, 191, .12), transparent 70%),
+    #111622 !important;
+  background-attachment: fixed !important;
+}
+
+:root[data-glass-yt="enabled"] #page-manager,
+:root[data-glass-yt="enabled"] #primary,
+:root[data-glass-yt="enabled"] #secondary,
+:root[data-glass-yt="enabled"] #contents,
+:root[data-glass-yt="enabled"] #columns {
+  background: transparent !important;
+}
+
+:root[data-glass-yt="enabled"] :is(ytd-app, ytd-page-manager, ytd-watch-flexy) {
+  color: var(--gyt-text);
+}
+
+:root[data-glass-yt="enabled"] :is(ytd-app, ytd-page-manager) a { color: inherit; }
+
+/* Prevent image media and the video stream from receiving translucent fills. */
+:root[data-glass-yt="enabled"] :is(img, video, canvas) { background-color: transparent; }
+
+/* A quiet ambient layer, isolated from pointer events and page interaction. */
+:root[data-glass-yt="enabled"] ytd-app::before {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  opacity: .7;
+  background-image: linear-gradient(118deg, transparent 0 34%, rgba(244, 249, 255, .025) 44%, transparent 56%);
+}
+
+/* 2. Header -------------------------------------------------------------- */
+:root[data-glass-yt="enabled"] ytd-masthead#masthead {
+  margin: 8px 12px 0;
+  width: calc(100% - 24px) !important;
+  border: 1px solid var(--gyt-border);
+  border-radius: var(--gyt-radius);
+  background: linear-gradient(105deg, rgba(43, 51, 77, .42), rgba(20, 27, 43, .32)) !important;
+  box-shadow: var(--gyt-shadow), inset 0 1px 0 rgba(255,255,255,.10);
+  backdrop-filter: var(--gyt-blur);
+  -webkit-backdrop-filter: var(--gyt-blur);
+}
+
+:root[data-glass-yt="enabled"] ytd-masthead#masthead::before {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  content: "";
+  opacity: .55;
+  background: linear-gradient(104deg, rgba(255,255,255,.10), transparent 22%, transparent 76%, rgba(178,209,255,.06));
+}
+
+:root[data-glass-yt="enabled"] #masthead-container.ytd-app {
+  background: transparent !important;
+}
+
+/* YouTube puts a second opaque surface inside the search form. Clear both
+   layers so the field actually shows the page glow through its blur. */
+:root[data-glass-yt="enabled"] #search-form.ytd-searchbox #container,
+:root[data-glass-yt="enabled"] #search-form.ytd-searchbox #container.ytd-searchbox {
+  background: transparent !important;
+}
+
+:root[data-glass-yt="enabled"] #masthead :is(button, yt-icon-button button) {
+  border-radius: 11px;
+  transition: var(--gyt-transition);
+}
+
+:root[data-glass-yt="enabled"] #masthead :is(button, yt-icon-button button):hover {
+  background-color: rgba(230, 240, 255, .12) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+}
+
+/* 3. Sidebar ------------------------------------------------------------- */
+:root[data-glass-yt="enabled"] tp-yt-app-drawer#guide,
+:root[data-glass-yt="enabled"] #guide-content.ytd-app,
+:root[data-glass-yt="enabled"] ytd-mini-guide-renderer {
+  background: linear-gradient(165deg, rgba(48, 66, 104, .39), rgba(16, 22, 35, .29)) !important;
+  border-right: 1px solid var(--gyt-border);
+  box-shadow: 10px 0 34px rgba(2, 7, 18, .12), inset -1px 0 rgba(255,255,255,.08);
+  backdrop-filter: blur(28px) saturate(165%);
+  -webkit-backdrop-filter: blur(28px) saturate(165%);
+}
+
+/* Keep the expanded guide legible and calm: one roomy row per destination,
+   no clipped labels, and no accidental horizontal scroll. */
+:root[data-glass-yt="enabled"] #guide-content.ytd-app {
+  padding: 12px 8px 20px !important;
+  overflow-x: hidden !important;
+}
+
+:root[data-glass-yt="enabled"] ytd-guide-entry-renderer,
+:root[data-glass-yt="enabled"] ytd-guide-section-renderer,
+:root[data-glass-yt="enabled"] ytd-mini-guide-entry-renderer {
+  display: block !important;
+  overflow: visible !important;
+}
+
+:root[data-glass-yt="enabled"] ytd-guide-entry-renderer #endpoint {
+  display: flex !important;
+  align-items: center !important;
+  min-height: 48px !important;
+  padding: 0 12px !important;
+  white-space: nowrap !important;
+}
+
+:root[data-glass-yt="enabled"] ytd-guide-entry-renderer #text {
+  display: block !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+  line-height: 1.2 !important;
+}
+
+:root[data-glass-yt="enabled"] ytd-guide-entry-renderer #icon {
+  flex: 0 0 28px;
+  margin-right: 14px;
+}
+
+:root[data-glass-yt="enabled"] ytd-guide-section-renderer {
+  padding: 8px 0 !important;
+}
+
+:root[data-glass-yt="enabled"] ytd-guide-section-renderer #guide-section-title {
+  margin: 10px 14px 6px !important;
+  color: var(--gyt-muted) !important;
+  font-size: 11px !important;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+:root[data-glass-yt="enabled"] ytd-guide-entry-renderer #endpoint,
+:root[data-glass-yt="enabled"] ytd-mini-guide-entry-renderer #endpoint {
+  margin-inline: 7px;
+  border: 1px solid transparent;
+  border-radius: 13px;
+  transition: var(--gyt-transition);
+}
+
+:root[data-glass-yt="enabled"] ytd-guide-entry-renderer #endpoint:hover,
+:root[data-glass-yt="enabled"] ytd-mini-guide-entry-renderer #endpoint:hover {
+  border-color: rgba(217, 232, 255, .12);
+  background: linear-gradient(100deg, rgba(173, 204, 255, .18), rgba(255,255,255,.07)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.10), 0 5px 13px rgba(0,0,0,.10);
+  transform: translateX(2px);
+}
+
+:root[data-glass-yt="enabled"] ytd-guide-entry-renderer[active] #endpoint,
+:root[data-glass-yt="enabled"] ytd-mini-guide-entry-renderer[active] #endpoint {
+  border-color: rgba(192, 215, 255, .24);
+  background: linear-gradient(105deg, rgba(121, 160, 236, .29), rgba(160, 190, 255, .12)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.13);
+}
+
+:root[data-glass-yt="enabled"] ytd-guide-section-renderer:not(:first-child) { border-color: rgba(227,238,255,.09) !important; }
+
+/* 4. Search -------------------------------------------------------------- */
+:root[data-glass-yt="enabled"] #search-form.ytd-searchbox {
+  overflow: hidden;
+  border: 1px solid rgba(227, 238, 255, .20) !important;
+  border-radius: 15px !important;
+  background: rgba(11, 17, 30, .22) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.07), 0 5px 13px rgba(1,7,20,.13);
+  transition: var(--gyt-transition);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+}
+
+:root[data-glass-yt="enabled"] #search-form.ytd-searchbox:focus-within {
+  border-color: rgba(180, 209, 255, .78) !important;
+  background: rgba(90, 127, 193, .23) !important;
+  box-shadow: 0 0 0 3px rgba(107, 153, 247, .16), inset 0 1px 0 rgba(255,255,255,.14), 0 7px 18px rgba(1,7,20,.16);
+}
+
+:root[data-glass-yt="enabled"] #search-input.ytd-searchbox,
+:root[data-glass-yt="enabled"] input#search {
+  background: transparent !important;
+  color: var(--gyt-text) !important;
+}
+
+:root[data-glass-yt="enabled"] #search-icon-legacy.ytd-searchbox {
+  border-left: 1px solid rgba(230,240,255,.10) !important;
+  border-radius: 0 14px 14px 0 !important;
+  background: rgba(222,235,255,.08) !important;
+  transition: var(--gyt-transition);
+}
+
+:root[data-glass-yt="enabled"] #search-icon-legacy.ytd-searchbox:hover { background: rgba(222,235,255,.16) !important; }
+:root[data-glass-yt="enabled"] #voice-search-button.ytd-masthead { background: rgba(220,233,255,.10) !important; border: 1px solid rgba(230,240,255,.12); }
+
+:root[data-glass-yt="enabled"] ytd-feed-filter-chip-bar-renderer {
+  background: transparent !important;
+}
+
+:root[data-glass-yt="enabled"] ytd-chip-cloud-chip-renderer iron-icon,
+:root[data-glass-yt="enabled"] yt-chip-cloud-chip-renderer iron-icon { opacity: .9; }
+
+/* 5. Cards, feeds, thumbnails ------------------------------------------ */
+:root[data-glass-yt="enabled"] :is(ytd-rich-item-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer, ytd-playlist-video-renderer) #dismissible {
+  position: relative;
+  border: 1px solid transparent;
+  border-radius: var(--gyt-radius);
+  transition: var(--gyt-transition);
+}
+
+:root[data-glass-yt="enabled"] :is(ytd-rich-item-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer, ytd-playlist-video-renderer) #dismissible:hover {
+  border-color: var(--gyt-border);
+  background: linear-gradient(145deg, rgba(151, 182, 237, .12), rgba(255,255,255,.035)) !important;
+  box-shadow: var(--gyt-shadow-lift), inset 0 1px 0 rgba(255,255,255,.09);
+  transform: translateY(-3px) scale(1.006);
+}
+
+:root[data-glass-yt="enabled"] :is(ytd-rich-item-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer, ytd-playlist-video-renderer) #thumbnail,
+:root[data-glass-yt="enabled"] :is(ytd-rich-grid-media, ytd-video-renderer, ytd-compact-video-renderer) a#thumbnail {
+  overflow: hidden;
+  border: 1px solid rgba(232,243,255,.15);
+  border-radius: 14px !important;
+  box-shadow: 0 7px 18px rgba(0,0,0,.19), inset 0 1px 0 rgba(255,255,255,.16);
+  transition: border-color 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+}
+
+:root[data-glass-yt="enabled"] :is(ytd-rich-item-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer, ytd-playlist-video-renderer) #dismissible:hover #thumbnail {
+  border-color: rgba(225,239,255,.36);
+  box-shadow: 0 10px 23px rgba(0,0,0,.25), 0 0 0 1px rgba(183,211,255,.06), inset 0 1px 0 rgba(255,255,255,.20);
+  filter: brightness(1.045) saturate(1.035);
+}
+
+/* Pseudo-element reflection stays above the image but never intercepts it. */
+:root[data-glass-yt="enabled"] :is(ytd-rich-grid-media, ytd-video-renderer, ytd-compact-video-renderer) a#thumbnail::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  opacity: .22;
+  background: linear-gradient(112deg, rgba(255,255,255,.20), transparent 22%, transparent 64%, rgba(201,225,255,.10));
+  transition: opacity 180ms ease;
+}
+
+:root[data-glass-yt="enabled"] #dismissible:hover a#thumbnail::after { opacity: .38; }
+
+:root[data-glass-yt="enabled"] :is(ytd-rich-grid-media, ytd-video-renderer, ytd-compact-video-renderer) #video-title {
+  transition: color 180ms ease;
+}
+:root[data-glass-yt="enabled"] #dismissible:hover #video-title { color: #fff !important; }
+
+:root[data-glass-yt="enabled"] ytd-chip-cloud-chip-renderer,
+:root[data-glass-yt="enabled"] yt-chip-cloud-chip-renderer {
+  border: 1px solid rgba(225,238,255,.12);
+  border-radius: 999px !important;
+  background: rgba(201,219,255,.09) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+  transition: var(--gyt-transition);
+}
+
+:root[data-glass-yt="enabled"] :is(ytd-chip-cloud-chip-renderer, yt-chip-cloud-chip-renderer):hover,
+:root[data-glass-yt="enabled"] :is(ytd-chip-cloud-chip-renderer, yt-chip-cloud-chip-renderer)[selected] {
+  border-color: rgba(222,237,255,.25);
+  background: rgba(168,198,253,.21) !important;
+  box-shadow: 0 5px 13px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.12);
+}
+
+/* 6. Video player -------------------------------------------------------- */
+:root[data-glass-yt="enabled"] #player-container-outer.ytd-watch-flexy,
+:root[data-glass-yt="enabled"] #player-full-bleed-container.ytd-watch-flexy {
+  overflow: hidden;
+  border: 1px solid rgba(230, 242, 255, .20);
+  border-radius: calc(var(--gyt-radius) + 2px);
+  background: rgba(13, 19, 31, .46);
+  box-shadow: 0 18px 43px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.11);
+}
+
+:root[data-glass-yt="enabled"] #movie_player {
+  overflow: hidden;
+  border-radius: calc(var(--gyt-radius) + 1px);
+}
+
+/* No border radius in full-screen: YouTube owns the immersive viewport. */
+:root[data-glass-yt="enabled"] .ytp-fullscreen #movie_player,
+:root[data-glass-yt="enabled"] #movie_player.ytp-fullscreen { border-radius: 0; }
+
+:root[data-glass-yt="enabled"] .ytp-chrome-bottom {
+  left: 10px !important;
+  right: 10px !important;
+  bottom: 9px !important;
+  width: auto !important;
+  padding: 5px 8px 3px;
+  border: 1px solid rgba(237,246,255,.16);
+  border-radius: 14px;
+  background: linear-gradient(105deg, rgba(15,21,33,.72), rgba(38,45,62,.56)) !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.10);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+}
+
+:root[data-glass-yt="enabled"] .ytp-chrome-controls .ytp-button {
+  margin-inline: 1px;
+  border-radius: 9px;
+  transition: background-color 150ms ease, transform 150ms ease;
+}
+
+:root[data-glass-yt="enabled"] .ytp-chrome-controls .ytp-button:hover {
+  background-color: rgba(237,246,255,.17);
+  transform: translateY(-1px);
+}
+
+:root[data-glass-yt="enabled"] .ytp-progress-bar-container { padding-inline: 3px; }
+:root[data-glass-yt="enabled"] .ytp-scrubber-button { background-color: #c8ddff; box-shadow: 0 0 0 4px rgba(182,211,255,.25); }
+:root[data-glass-yt="enabled"] .ytp-play-progress { background: linear-gradient(90deg, #a8c5ff, #d2edff); }
+:root[data-glass-yt="enabled"] .ytp-load-progress { background: rgba(234,242,255,.34); }
+
+/* 7. Buttons and action rows ------------------------------------------- */
+:root[data-glass-yt="enabled"] :is(ytd-watch-metadata, ytd-video-owner-renderer, ytd-comment-thread-renderer, ytd-comments-header-renderer, ytd-c4-tabbed-header-renderer) yt-button-shape > button,
+:root[data-glass-yt="enabled"] :is(ytd-watch-metadata, ytd-video-owner-renderer, ytd-comment-thread-renderer, ytd-comments-header-renderer, ytd-c4-tabbed-header-renderer) ytd-button-renderer button {
+  border: 1px solid rgba(227, 239, 255, .15) !important;
+  border-radius: 12px !important;
+  background: linear-gradient(115deg, rgba(218,233,255,.13), rgba(255,255,255,.06)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+  transition: var(--gyt-transition);
+}
+
+:root[data-glass-yt="enabled"] :is(ytd-watch-metadata, ytd-video-owner-renderer, ytd-comment-thread-renderer, ytd-comments-header-renderer, ytd-c4-tabbed-header-renderer) yt-button-shape > button:hover,
+:root[data-glass-yt="enabled"] :is(ytd-watch-metadata, ytd-video-owner-renderer, ytd-comment-thread-renderer, ytd-comments-header-renderer, ytd-c4-tabbed-header-renderer) ytd-button-renderer button:hover {
+  border-color: rgba(231,242,255,.31) !important;
+  background: linear-gradient(115deg, rgba(177,209,255,.27), rgba(255,255,255,.13)) !important;
+  box-shadow: 0 6px 15px rgba(0,0,0,.14), inset 0 1px 0 rgba(255,255,255,.17);
+  transform: translateY(-1px);
+}
+
+:root[data-glass-yt="enabled"] ytd-video-owner-renderer yt-button-shape[button-style="STYLE_PRIMARY"] > button,
+:root[data-glass-yt="enabled"] ytd-c4-tabbed-header-renderer yt-button-shape[button-style="STYLE_PRIMARY"] > button {
+  border-color: rgba(222,236,255,.45) !important;
+  background: linear-gradient(105deg, rgba(126,167,243,.86), rgba(102,146,222,.79)) !important;
+  box-shadow: 0 8px 18px rgba(60,108,194,.28), inset 0 1px 0 rgba(255,255,255,.25);
+}
+
+:root[data-glass-yt="enabled"] ytd-toggle-button-renderer yt-button-shape > button,
+:root[data-glass-yt="enabled"] ytd-segmented-like-dislike-button-renderer yt-button-shape > button {
+  border: 1px solid rgba(225,238,255,.14) !important;
+  background: rgba(213,230,255,.10) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.09);
+}
+
+:root[data-glass-yt="enabled"] ytd-toggle-button-renderer yt-button-shape > button:hover,
+:root[data-glass-yt="enabled"] ytd-segmented-like-dislike-button-renderer yt-button-shape > button:hover { background: rgba(186,213,255,.20) !important; }
+
+/* 8. Menus, dialogs, popup surfaces ------------------------------------ */
+:root[data-glass-yt="enabled"] :is(tp-yt-paper-dialog, ytd-multi-page-menu-renderer, ytd-menu-popup-renderer, ytd-popup-container tp-yt-paper-listbox, ytd-searchbox-suggestions-container, ytd-engagement-panel-section-list-renderer) {
+  border: 1px solid rgba(230,242,255,.18) !important;
+  border-radius: var(--gyt-radius) !important;
+  background: linear-gradient(145deg, rgba(58,75,111,.58), rgba(19,25,40,.48)) !important;
+  box-shadow: 0 18px 42px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.13) !important;
+  backdrop-filter: var(--gyt-blur-heavy);
+  -webkit-backdrop-filter: var(--gyt-blur-heavy);
+}
+
+:root[data-glass-yt="enabled"] ytd-menu-service-item-renderer,
+:root[data-glass-yt="enabled"] tp-yt-paper-item {
+  margin-inline: 6px;
+  border-radius: 10px;
+  transition: var(--gyt-transition);
+}
+
+:root[data-glass-yt="enabled"] :is(ytd-menu-service-item-renderer, tp-yt-paper-item):hover {
+  background: rgba(197,220,255,.16) !important;
+  transform: translateX(1px);
+}
+
+:root[data-glass-yt="enabled"] ytd-searchbox-suggestions-container {
+  margin-top: 7px;
+  overflow: hidden;
+}
+
+/* 9. Comments ----------------------------------------------------------- */
+:root[data-glass-yt="enabled"] ytd-comments#comments {
+  padding: 14px 18px;
+  border: 1px solid rgba(230,241,255,.10);
+  border-radius: var(--gyt-radius);
+  background: linear-gradient(145deg, rgba(42,50,72,.38), rgba(19,24,39,.27));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+:root[data-glass-yt="enabled"] ytd-comment-thread-renderer #body {
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  transition: var(--gyt-transition);
+}
+
+:root[data-glass-yt="enabled"] ytd-comment-thread-renderer #body:hover {
+  border-color: rgba(226,238,255,.11);
+  background: rgba(200,220,255,.075);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+:root[data-glass-yt="enabled"] ytd-comment-simplebox-renderer #placeholder-area,
+:root[data-glass-yt="enabled"] ytd-comment-simplebox-renderer #contenteditable-root {
+  border-radius: 11px;
+  transition: var(--gyt-transition);
+}
+
+:root[data-glass-yt="enabled"] ytd-comment-simplebox-renderer:focus-within #placeholder-area,
+:root[data-glass-yt="enabled"] ytd-comment-simplebox-renderer:focus-within #contenteditable-root {
+  background: rgba(197,219,255,.08);
+  box-shadow: 0 2px 0 var(--gyt-accent-strong), 0 6px 13px rgba(0,0,0,.10);
+}
+
+/* 10. Channels, playlists, sections ------------------------------------ */
+:root[data-glass-yt="enabled"] ytd-c4-tabbed-header-renderer,
+:root[data-glass-yt="enabled"] ytd-playlist-header-renderer,
+:root[data-glass-yt="enabled"] ytd-two-column-browse-results-renderer[page-subtype="channels"] #primary {
+  overflow: hidden;
+  border: 1px solid rgba(229,241,255,.14);
+  border-radius: var(--gyt-radius);
+  background: linear-gradient(145deg, rgba(44,54,79,.48), rgba(19,25,40,.37));
+  box-shadow: var(--gyt-shadow), inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter: blur(14px) saturate(135%);
+  -webkit-backdrop-filter: blur(14px) saturate(135%);
+}
+
+:root[data-glass-yt="enabled"] ytd-c4-tabbed-header-renderer #tabs-container,
+:root[data-glass-yt="enabled"] ytd-feed-filter-chip-bar-renderer { background: rgba(17,23,37,.30) !important; }
+
+:root[data-glass-yt="enabled"] ytd-playlist-panel-renderer,
+:root[data-glass-yt="enabled"] ytd-playlist-byline-renderer {
+  border: 1px solid rgba(228,240,255,.14);
+  border-radius: var(--gyt-radius);
+  background: rgba(28,35,54,.58) !important;
+  box-shadow: var(--gyt-shadow), inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter: blur(18px) saturate(145%);
+}
+
+/* 11. Shorts ------------------------------------------------------------- */
+:root[data-glass-yt="enabled"] ytd-reel-player-overlay-renderer,
+:root[data-glass-yt="enabled"] ytd-reel-video-renderer #overlay {
+  border: 1px solid rgba(232,243,255,.13);
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(21,28,44,.50), rgba(29,35,52,.28));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+}
+
+:root[data-glass-yt="enabled"] ytd-reel-player-overlay-renderer button,
+:root[data-glass-yt="enabled"] ytd-reel-video-renderer ytd-button-renderer button {
+  border: 1px solid rgba(235,244,255,.15);
+  border-radius: 12px;
+  background: rgba(26,34,52,.50) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+  transition: var(--gyt-transition);
+}
+
+:root[data-glass-yt="enabled"] :is(ytd-reel-player-overlay-renderer button, ytd-reel-video-renderer ytd-button-renderer button):hover {
+  background: rgba(187,214,255,.18) !important;
+  transform: translateY(-1px);
+}
+
+/* 12. Small glass surfaces ------------------------------------------------ */
+:root[data-glass-yt="enabled"] :is(ytd-rich-section-renderer, ytd-item-section-renderer, ytd-shelf-renderer) > #contents {
+  border-radius: var(--gyt-radius);
+}
+
+:root[data-glass-yt="enabled"] ytd-notification-topbar-button-renderer #button,
+:root[data-glass-yt="enabled"] ytd-topbar-menu-button-renderer #button {
+  border: 1px solid transparent;
+  border-radius: 11px;
+}
+
+:root[data-glass-yt="enabled"] :is(ytd-notification-topbar-button-renderer, ytd-topbar-menu-button-renderer) #button:hover {
+  border-color: rgba(229,240,255,.13);
+  background: rgba(222,236,255,.11) !important;
+}
+
+/* 13. Reflections and motion -------------------------------------------- */
+:root[data-glass-yt="enabled"] :is(ytd-comments#comments, ytd-c4-tabbed-header-renderer, ytd-playlist-header-renderer, ytd-playlist-panel-renderer)::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  opacity: .23;
+  background: linear-gradient(115deg, rgba(255,255,255,.15), transparent 18%, transparent 73%, rgba(175,211,255,.08));
+}
+
+/* 14. Light mode --------------------------------------------------------- */
+:root[data-glass-yt="enabled"]:not([dark]) {
+  --gyt-bg: rgba(255, 255, 255, .34);
+  --gyt-bg-soft: rgba(255, 255, 255, .25);
+  --gyt-bg-strong: rgba(255, 255, 255, .52);
+  --gyt-bg-hover: rgba(92, 133, 201, .12);
+  --gyt-border: rgba(65, 86, 123, .16);
+  --gyt-border-bright: rgba(53, 81, 128, .27);
+  --gyt-text: #182238;
+  --gyt-muted: rgba(36, 51, 79, .75);
+  --gyt-accent: #315fbb;
+  --gyt-accent-strong: #4678dc;
+  --gyt-shadow: 0 12px 34px rgba(33, 53, 86, .13), 0 2px 9px rgba(33, 53, 86, .08);
+  --gyt-shadow-lift: 0 18px 42px rgba(33, 53, 86, .19), 0 4px 11px rgba(33, 53, 86, .10);
+  --yt-spec-base-background: transparent;
+  --yt-spec-raised-background: rgba(255,255,255,.52);
+  --yt-spec-menu-background: rgba(250,252,255,.66);
+  --yt-spec-additive-background: rgba(55,95,164,.10);
+  --yt-spec-text-primary: var(--gyt-text);
+  --yt-spec-text-secondary: var(--gyt-muted);
+}
+
+:root[data-glass-yt="enabled"]:not([dark]) :is(body, ytd-app, #content.ytd-app, ytd-page-manager) {
+  background:
+    radial-gradient(900px 560px at -4% -3%, rgba(111, 160, 245, .23), transparent 64%),
+    radial-gradient(750px 520px at 103% 12%, rgba(105, 216, 202, .16), transparent 65%),
+    radial-gradient(760px 640px at 52% 102%, rgba(183, 178, 245, .17), transparent 70%),
+    #eef3fb !important;
+}
+
+:root[data-glass-yt="enabled"]:not([dark]) ytd-masthead#masthead {
+  background: linear-gradient(105deg, rgba(255,255,255,.48), rgba(235,242,253,.35)) !important;
+}
+
+:root[data-glass-yt="enabled"]:not([dark]) :is(tp-yt-app-drawer#guide, #guide-content.ytd-app, ytd-mini-guide-renderer) {
+  background: linear-gradient(165deg, rgba(250,253,255,.48), rgba(229,238,251,.34)) !important;
+  box-shadow: 10px 0 34px rgba(45,72,116,.08), inset -1px 0 rgba(255,255,255,.35);
+}
+
+:root[data-glass-yt="enabled"]:not([dark]) #search-form.ytd-searchbox { background: rgba(255,255,255,.30) !important; }
+:root[data-glass-yt="enabled"]:not([dark]) #search-form.ytd-searchbox:focus-within { background: rgba(255,255,255,.52) !important; }
+
+:root[data-glass-yt="enabled"]:not([dark]) :is(tp-yt-paper-dialog, ytd-multi-page-menu-renderer, ytd-menu-popup-renderer, ytd-popup-container tp-yt-paper-listbox, ytd-searchbox-suggestions-container, ytd-engagement-panel-section-list-renderer) {
+  background: linear-gradient(145deg, rgba(255,255,255,.65), rgba(238,245,255,.52)) !important;
+  box-shadow: 0 18px 42px rgba(33,53,86,.16), inset 0 1px 0 rgba(255,255,255,.65) !important;
+}
+
+:root[data-glass-yt="enabled"]:not([dark]) :is(ytd-comments#comments, ytd-c4-tabbed-header-renderer, ytd-playlist-header-renderer, ytd-two-column-browse-results-renderer[page-subtype="channels"] #primary) {
+  background: linear-gradient(145deg, rgba(255,255,255,.57), rgba(239,246,255,.43));
+}
+
+:root[data-glass-yt="enabled"]:not([dark]) #player-container-outer.ytd-watch-flexy,
+:root[data-glass-yt="enabled"]:not([dark]) #player-full-bleed-container.ytd-watch-flexy { background: rgba(255,255,255,.31); }
+
+/* 15. Accessibility ------------------------------------------------------ */
+:root[data-glass-yt="enabled"] :is(a, button, input, [tabindex]):focus-visible {
+  outline: 2px solid var(--gyt-accent) !important;
+  outline-offset: 3px !important;
+}
+
+:root[data-glass-yt="enabled"] :is(#video-title, #channel-name, #author-text, #content-text) { text-shadow: 0 1px 1px rgba(0,0,0,.08); }
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-glass-yt="enabled"] *,
+  :root[data-glass-yt="enabled"] *::before,
+  :root[data-glass-yt="enabled"] *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* 16. Performance safeguards --------------------------------------------
+   No animation runs continuously on page content. The visual system relies
+   on composited CSS states only; full-screen video and image pixels remain
+   unmodified. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root[data-glass-yt="enabled"] :is(ytd-masthead#masthead, tp-yt-app-drawer#guide, #guide-content.ytd-app, ytd-mini-guide-renderer, tp-yt-paper-dialog, ytd-multi-page-menu-renderer, ytd-menu-popup-renderer) {
+    background-color: rgba(24, 31, 48, .95) !important;
+  }
+  :root[data-glass-yt="enabled"]:not([dark]) :is(ytd-masthead#masthead, tp-yt-app-drawer#guide, #guide-content.ytd-app, ytd-mini-guide-renderer, tp-yt-paper-dialog, ytd-multi-page-menu-renderer, ytd-menu-popup-renderer) {
+    background-color: rgba(248, 251, 255, .96) !important;
+  }
+}
+
+/* 17. Apple-style liquid glass refinement -------------------------------
+   This layer intentionally removes the earlier heavy panels. Surfaces are
+   now clear, neutral and edge-lit, with the blur/strength controls supplied
+   by the popup through CSS custom properties. */
+:root[data-glass-yt="enabled"] {
+  --gyt-blur: blur(var(--gyt-blur-amount, 24px)) saturate(145%);
+  --gyt-blur-heavy: blur(calc(var(--gyt-blur-amount, 24px) + 8px)) saturate(155%);
+  --gyt-surface: var(--gyt-glass-surface, rgba(255,255,255,.10));
+  --gyt-surface-strong: var(--gyt-glass-surface-strong, rgba(255,255,255,.16));
+  --gyt-surface-hover: var(--gyt-glass-hover, rgba(255,255,255,.18));
+}
+
+/* Sticky header: YouTube has several nested backgrounds that turn opaque
+   after an infinite-scroll transition. Clear every layer, not only masthead. */
+:root[data-glass-yt="enabled"] :is(#masthead-container, #masthead-container.ytd-app, ytd-masthead#masthead, #masthead, #background.ytd-masthead, #container.ytd-masthead) {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+:root[data-glass-yt="enabled"] ytd-masthead#masthead {
+  position: relative !important;
+  z-index: 100 !important;
+  background: linear-gradient(110deg, var(--gyt-surface-strong), var(--gyt-surface)) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.22) !important;
+}
+
+/* Make the YouTube mark part of the same translucent object while keeping it
+   recognizable. */
+:root[data-glass-yt="enabled"] #logo.ytd-topbar-logo-renderer,
+:root[data-glass-yt="enabled"] #logo {
+  padding: 5px 8px !important;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 14px;
+  background: var(--gyt-surface) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.18);
+}
+
+:root[data-glass-yt="enabled"] #logo-icon,
+:root[data-glass-yt="enabled"] ytd-topbar-logo-renderer yt-icon {
+  filter: saturate(.52) brightness(1.18) drop-shadow(0 2px 5px rgba(0,0,0,.18));
+}
+
+/* Edge surfaces are open, not boxed-in. */
+:root[data-glass-yt="enabled"] :is(#guide-content.ytd-app, ytd-mini-guide-renderer, #secondary, #secondary-inner, #related, #panels, #columns, #primary, #comments) {
+  border-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+:root[data-glass-yt="enabled"] :is(tp-yt-app-drawer#guide, #guide-content.ytd-app, ytd-mini-guide-renderer) {
+  background: linear-gradient(155deg, var(--gyt-surface-strong), var(--gyt-surface)) !important;
+  border-right: 1px solid rgba(255,255,255,.15) !important;
+  box-shadow: 12px 0 32px rgba(0,0,0,.10), inset -1px 0 rgba(255,255,255,.10) !important;
+}
+
+:root[data-glass-yt="enabled"] :is(ytd-watch-next-secondary-results-renderer, ytd-playlist-panel-renderer) {
+  border: 1px solid rgba(255,255,255,.12) !important;
+  border-radius: 22px !important;
+  background: linear-gradient(145deg, var(--gyt-surface-strong), var(--gyt-surface)) !important;
+  box-shadow: 0 12px 30px rgba(0,0,0,.10), inset 0 1px 0 rgba(255,255,255,.16) !important;
+}
+
+/* Remove the grid of hard card rectangles; only the hovered card receives a
+   quiet lifted pane and a Mac-Dock-like magnification. */
+:root[data-glass-yt="enabled"] :is(ytd-rich-item-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer, ytd-playlist-video-renderer) #dismissible {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform-origin: center bottom;
+  transition: transform 220ms cubic-bezier(.2,.8,.2,1), background 220ms ease, box-shadow 220ms ease, filter 220ms ease;
+}
+
+:root[data-glass-yt="enabled"] :is(ytd-rich-item-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer, ytd-playlist-video-renderer) #dismissible:hover {
+  z-index: 4;
+  border: 1px solid rgba(255,255,255,.16) !important;
+  background: linear-gradient(145deg, var(--gyt-surface-hover), rgba(255,255,255,.03)) !important;
+  box-shadow: 0 18px 36px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.20) !important;
+  transform: translateY(calc(-1 * var(--gyt-card-lift, 5px))) scale(var(--gyt-card-scale)) !important;
+}
+
+:root[data-glass-yt="enabled"] :is(ytd-rich-item-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer, ytd-playlist-video-renderer) #thumbnail {
+  border: 1px solid rgba(255,255,255,.13) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 9px 24px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.20) !important;
+}
+
+@supports selector(:has(*)) {
+  :root[data-glass-yt="enabled"] ytd-rich-grid-renderer #contents:has(> ytd-rich-item-renderer:hover) > ytd-rich-item-renderer:not(:hover) #dismissible {
+    filter: saturate(.92) brightness(.96);
+    transform: scale(.985) !important;
+  }
+}
+
+:root[data-glass-yt="enabled"] ytd-comments#comments {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+/* 18. Unified theme-token layer ----------------------------------------- */
+:root[data-glass-yt="enabled"] {
+  --gyt-primary: #8ab4ff;
+  --gyt-primary-rgb: 138, 180, 255;
+  --gyt-secondary: #b8d1ff;
+  --gyt-accent: var(--gyt-primary);
+  --gyt-glow: rgba(var(--gyt-primary-rgb), .12);
+  --gyt-surface-alpha: .08;
+  --gyt-surface-strong-alpha: .14;
+  --gyt-surface-hover-alpha: .18;
+  --gyt-border-alpha: .12;
+  --gyt-shadow-alpha: .16;
+  --gyt-surface: rgba(var(--gyt-primary-rgb), var(--gyt-surface-alpha));
+  --gyt-surface-strong: rgba(var(--gyt-primary-rgb), var(--gyt-surface-strong-alpha));
+  --gyt-surface-hover: rgba(var(--gyt-primary-rgb), var(--gyt-surface-hover-alpha));
+  --gyt-border: rgba(var(--gyt-primary-rgb), var(--gyt-border-alpha));
+  --gyt-blur-amount: 24px;
+  --gyt-radius: 18px;
+  --gyt-animation-duration: 220ms;
+  --gyt-reflection-opacity: .18;
+  --gyt-reflection-duration: 7s;
+  --gyt-ambient-opacity: 0;
+  --gyt-font-family: Inter, system-ui, sans-serif;
+  --gyt-font-weight: 500;
+  --gyt-font-size: 100%;
+  --gyt-letter-spacing: 0em;
+  --gyt-line-height: 1.35;
+  --gyt-card-scale: 1.025;
+  --gyt-card-lift: 4px;
+  --gyt-primary-contrast: #fff;
+  --gyt-transition: background-color var(--gyt-animation-duration) ease, border-color var(--gyt-animation-duration) ease, box-shadow var(--gyt-animation-duration) ease, transform var(--gyt-animation-duration) cubic-bezier(.2,.8,.2,1), filter var(--gyt-animation-duration) ease;
+}
+
+:root[data-glass-yt="enabled"] ytd-app {
+  font-family: var(--gyt-font-family) !important;
+  font-size: var(--gyt-font-size) !important;
+  letter-spacing: var(--gyt-letter-spacing) !important;
+  line-height: var(--gyt-line-height);
+}
+
+:root[data-glass-yt="enabled"] ytd-app :is(yt-formatted-string, #video-title, #channel-name, #author-text, #content-text, #metadata-line, #description, input, textarea, button) {
+  font-family: var(--gyt-font-family) !important;
+  font-weight: var(--gyt-font-weight);
+  letter-spacing: var(--gyt-letter-spacing);
+}
+
+:root[data-glass-yt="enabled"] ytd-app,
+:root[data-glass-yt="enabled"] ytd-app * {
+  scrollbar-color: rgba(var(--gyt-primary-rgb), .62) transparent;
+  scrollbar-width: thin;
+}
+
+:root[data-glass-yt="enabled"] ytd-app ::-webkit-scrollbar { width: 9px; height: 9px; }
+:root[data-glass-yt="enabled"] ytd-app ::-webkit-scrollbar-track { background: transparent; }
+:root[data-glass-yt="enabled"] ytd-app ::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: rgba(var(--gyt-primary-rgb), .48);
+  background-clip: padding-box;
+}
+
+/* A single ambient glow behind the page, never a painted panel. */
+:root[data-glass-yt="enabled"][data-glass-yt-ambient] ytd-app::after {
+  position: fixed;
+  z-index: -1;
+  inset: -18%;
+  pointer-events: none;
+  content: "";
+  opacity: var(--gyt-ambient-opacity);
+  background:
+    radial-gradient(45% 38% at 12% 8%, rgba(var(--gyt-primary-rgb), .9), transparent 75%),
+    radial-gradient(42% 36% at 88% 76%, rgba(var(--gyt-primary-rgb), .65), transparent 78%);
+  filter: blur(54px);
+}
+
+/* Header and sidebar are light-catching edges, not opaque containers. */
+:root[data-glass-yt="enabled"] ytd-masthead#masthead {
+  border-color: var(--gyt-border) !important;
+  border-radius: max(12px, var(--gyt-radius)) !important;
+  background: linear-gradient(110deg, var(--gyt-surface-strong), var(--gyt-surface)) !important;
+  backdrop-filter: blur(var(--gyt-blur-amount)) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(var(--gyt-blur-amount)) saturate(150%) !important;
+  box-shadow: 0 12px 34px rgba(0,0,0,var(--gyt-shadow-alpha)), inset 0 1px 0 rgba(255,255,255,.20) !important;
+}
+
+:root[data-glass-yt="enabled"][data-glass-yt-header="minimal"] ytd-masthead#masthead {
+  border-color: transparent !important;
+  box-shadow: inset 0 -1px 0 var(--gyt-border) !important;
+  background: rgba(var(--gyt-primary-rgb), .025) !important;
+}
+
+:root[data-glass-yt="enabled"] :is(tp-yt-app-drawer#guide, #guide-content.ytd-app, ytd-mini-guide-renderer) {
+  border-right-color: var(--gyt-border) !important;
+  background: linear-gradient(155deg, var(--gyt-surface-strong), var(--gyt-surface)) !important;
+  backdrop-filter: blur(var(--gyt-blur-amount)) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(var(--gyt-blur-amount)) saturate(145%) !important;
+}
+
+:root[data-glass-yt="enabled"][data-glass-yt-sidebar="clear"] :is(tp-yt-app-drawer#guide, #guide-content.ytd-app, ytd-mini-guide-renderer) {
+  border-right-color: transparent !important;
+  background: rgba(var(--gyt-primary-rgb), .018) !important;
+  box-shadow: none !important;
+}
+
+:root[data-glass-yt="enabled"] ytd-guide-entry-renderer #endpoint,
+:root[data-glass-yt="enabled"] ytd-mini-guide-entry-renderer #endpoint {
+  border: 1px solid transparent !important;
+  border-radius: max(10px, calc(var(--gyt-radius) - 6px)) !important;
+  background: transparent !important;
+  transition: var(--gyt-transition) !important;
+}
+
+:root[data-glass-yt="enabled"] ytd-guide-entry-renderer #endpoint:hover,
+:root[data-glass-yt="enabled"] ytd-mini-guide-entry-renderer #endpoint:hover {
+  border-color: var(--gyt-border) !important;
+  background: var(--gyt-surface-hover) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.15), 0 5px 15px rgba(0,0,0,.08) !important;
+  transform: none !important;
+}
+
+:root[data-glass-yt="enabled"] ytd-guide-entry-renderer[active] #endpoint,
+:root[data-glass-yt="enabled"] ytd-mini-guide-entry-renderer[active] #endpoint {
+  position: relative;
+  border-color: var(--gyt-border) !important;
+  background: var(--gyt-surface-hover) !important;
+  box-shadow: 0 0 18px var(--gyt-glow), inset 0 1px 0 rgba(255,255,255,.18) !important;
+}
+
+:root[data-glass-yt="enabled"] ytd-guide-entry-renderer[active] #endpoint::before {
+  position: absolute;
+  left: 3px;
+  width: 3px;
+  height: 22px;
+  border-radius: 99px;
+  content: "";
+  background: var(--gyt-primary);
+  box-shadow: 0 0 10px var(--gyt-glow);
+}
+
+/* Search and chips share the accent without becoming plastic pills. */
+:root[data-glass-yt="enabled"] #search-form.ytd-searchbox {
+  border-color: var(--gyt-border) !important;
+  border-radius: max(12px, calc(var(--gyt-radius) - 3px)) !important;
+  background: var(--gyt-surface) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.13), 0 4px 18px rgba(0,0,0,var(--gyt-shadow-alpha)) !important;
+  backdrop-filter: blur(var(--gyt-blur-amount)) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(var(--gyt-blur-amount)) saturate(145%) !important;
+}
+
+:root[data-glass-yt="enabled"] #search-form.ytd-searchbox:focus-within {
+  border-color: var(--gyt-primary) !important;
+  box-shadow: 0 0 0 3px var(--gyt-glow), inset 0 1px 0 rgba(255,255,255,.20), 0 8px 20px rgba(0,0,0,var(--gyt-shadow-alpha)) !important;
+}
+
+:root[data-glass-yt="enabled"] :is(ytd-chip-cloud-chip-renderer, yt-chip-cloud-chip-renderer) {
+  border-color: transparent !important;
+  border-radius: 10px !important;
+  background: rgba(var(--gyt-primary-rgb), .035) !important;
+  box-shadow: none !important;
+}
+
+:root[data-glass-yt="enabled"] :is(ytd-chip-cloud-chip-renderer:hover, yt-chip-cloud-chip-renderer:hover, ytd-chip-cloud-chip-renderer[selected], yt-chip-cloud-chip-renderer[selected]) {
+  border-color: var(--gyt-border) !important;
+  background: var(--gyt-surface-hover) !important;
+  color: var(--gyt-primary) !important;
+  box-shadow: 0 0 14px var(--gyt-glow) !important;
+}
+
+/* Cards stay open until the pointer asks for a floating surface. */
+:root[data-glass-yt="enabled"] :is(ytd-rich-item-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer, ytd-playlist-video-renderer) #dismissible {
+  border-radius: max(12px, calc(var(--gyt-radius) - 2px)) !important;
+  background: transparent !important;
+  transition: var(--gyt-transition) !important;
+}
+
+:root[data-glass-yt="enabled"] :is(ytd-rich-item-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer, ytd-playlist-video-renderer) #dismissible:hover {
+  border-color: var(--gyt-border) !important;
+  background: linear-gradient(145deg, var(--gyt-surface-hover), transparent 75%) !important;
+  box-shadow: 0 18px 36px rgba(0,0,0,var(--gyt-shadow-alpha)), 0 0 20px var(--gyt-glow) !important;
+  transform: translateY(calc(-1 * var(--gyt-card-lift))) scale(var(--gyt-card-scale)) !important;
+}
+
+:root[data-glass-yt="enabled"][data-glass-yt-card="clear"] :is(ytd-rich-item-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer, ytd-playlist-video-renderer) #dismissible:hover {
+  background: transparent !important;
+  box-shadow: 0 14px 30px rgba(0,0,0,var(--gyt-shadow-alpha)), 0 0 16px var(--gyt-glow) !important;
+}
+
+:root[data-glass-yt="enabled"] :is(ytd-rich-item-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer, ytd-playlist-video-renderer) #thumbnail {
+  border-color: var(--gyt-border) !important;
+  border-radius: max(12px, calc(var(--gyt-radius) + 1px)) !important;
+  transition: transform 300ms cubic-bezier(.2,.8,.2,1), border-color var(--gyt-animation-duration) ease, box-shadow var(--gyt-animation-duration) ease, filter var(--gyt-animation-duration) ease !important;
+}
+
+:root[data-glass-yt="enabled"][data-glass-yt-hover] :is(ytd-rich-item-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer, ytd-playlist-video-renderer) #dismissible:hover #thumbnail {
+  border-color: var(--gyt-primary) !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,var(--gyt-shadow-alpha)), 0 0 18px var(--gyt-glow) !important;
+  transform: scale(1.035) !important;
+}
+
+:root[data-glass-yt="enabled"]:not([data-glass-yt-hover]) :is(ytd-rich-item-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer, ytd-playlist-video-renderer) #dismissible:hover {
+  transform: none !important;
+}
+
+/* Shared controls, subscribe variants, menus, comments and player. */
+:root[data-glass-yt="enabled"] :is(yt-button-shape > button, ytd-button-renderer button, ytd-toggle-button-renderer button) {
+  border-color: var(--gyt-border) !important;
+  border-radius: max(9px, calc(var(--gyt-radius) - 5px)) !important;
+  background: var(--gyt-surface) !important;
+  color: var(--gyt-primary-contrast) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.13) !important;
+  transition: var(--gyt-transition) !important;
+}
+
+:root[data-glass-yt="enabled"] :is(yt-button-shape > button, ytd-button-renderer button, ytd-toggle-button-renderer button):hover {
+  border-color: var(--gyt-primary) !important;
+  background: var(--gyt-surface-hover) !important;
+  box-shadow: 0 0 14px var(--gyt-glow), inset 0 1px 0 rgba(255,255,255,.20) !important;
+}
+
+:root[data-glass-yt="enabled"][data-glass-yt-button="solid"] :is(yt-button-shape > button, ytd-button-renderer button) {
+  border-color: var(--gyt-primary) !important;
+  background: var(--gyt-primary) !important;
+  color: var(--gyt-primary-contrast) !important;
+}
+
+:root[data-glass-yt="enabled"][data-glass-yt-button="outline"] :is(yt-button-shape > button, ytd-button-renderer button) {
+  border-color: var(--gyt-primary) !important;
+  background: transparent !important;
+  color: var(--gyt-primary) !important;
+}
+
+:root[data-glass-yt="enabled"][data-glass-yt-button="gradient"] :is(yt-button-shape > button, ytd-button-renderer button) {
+  border-color: transparent !important;
+  background: linear-gradient(110deg, var(--gyt-primary), var(--gyt-secondary)) !important;
+  color: var(--gyt-primary-contrast) !important;
+}
+
+:root[data-glass-yt="enabled"][data-glass-yt-subscribe="solid"] ytd-video-owner-renderer yt-button-shape > button,
+:root[data-glass-yt="enabled"][data-glass-yt-subscribe="solid"] ytd-c4-tabbed-header-renderer yt-button-shape > button {
+  background: var(--gyt-primary) !important;
+  color: var(--gyt-primary-contrast) !important;
+}
+
+:root[data-glass-yt="enabled"][data-glass-yt-subscribe="gradient"] ytd-video-owner-renderer yt-button-shape > button,
+:root[data-glass-yt="enabled"][data-glass-yt-subscribe="gradient"] ytd-c4-tabbed-header-renderer yt-button-shape > button {
+  border-color: transparent !important;
+  background: linear-gradient(110deg, var(--gyt-primary), var(--gyt-secondary)) !important;
+}
+
+:root[data-glass-yt="enabled"] :is(tp-yt-paper-dialog, ytd-multi-page-menu-renderer, ytd-menu-popup-renderer, ytd-popup-container tp-yt-paper-listbox, ytd-searchbox-suggestions-container) {
+  border-color: var(--gyt-border) !important;
+  border-radius: max(12px, var(--gyt-radius)) !important;
+  background: linear-gradient(145deg, var(--gyt-surface-strong), var(--gyt-surface)) !important;
+  box-shadow: 0 20px 44px rgba(0,0,0,var(--gyt-shadow-alpha)), inset 0 1px 0 rgba(255,255,255,.19) !important;
+  backdrop-filter: blur(calc(var(--gyt-blur-amount) + 10px)) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(calc(var(--gyt-blur-amount) + 10px)) saturate(160%) !important;
+}
+
+:root[data-glass-yt="enabled"] :is(ytd-menu-service-item-renderer, tp-yt-paper-item):hover {
+  background: var(--gyt-surface-hover) !important;
+  color: var(--gyt-primary) !important;
+}
+
+:root[data-glass-yt="enabled"] #player-container-outer.ytd-watch-flexy,
+:root[data-glass-yt="enabled"] #player-full-bleed-container.ytd-watch-flexy {
+  border-color: var(--gyt-border) !important;
+  border-radius: max(12px, calc(var(--gyt-radius) + 2px)) !important;
+  background: var(--gyt-surface) !important;
+  box-shadow: 0 20px 48px rgba(0,0,0,var(--gyt-shadow-alpha)), 0 0 28px var(--gyt-glow), inset 0 1px 0 rgba(255,255,255,.18) !important;
+}
+
+:root[data-glass-yt="enabled"] .ytp-chrome-bottom {
+  border-color: var(--gyt-border) !important;
+  background: linear-gradient(110deg, var(--gyt-surface-strong), var(--gyt-surface)) !important;
+  box-shadow: 0 10px 26px rgba(0,0,0,var(--gyt-shadow-alpha)), inset 0 1px 0 rgba(255,255,255,.16) !important;
+  backdrop-filter: blur(var(--gyt-blur-amount)) saturate(150%) !important;
+}
+
+:root[data-glass-yt="enabled"] .ytp-play-progress,
+:root[data-glass-yt="enabled"] .ytp-scrubber-button { background: var(--gyt-primary) !important; }
+:root[data-glass-yt="enabled"] ytd-comment-thread-renderer #body:hover,
+:root[data-glass-yt="enabled"] ytd-comment-simplebox-renderer:focus-within #placeholder-area,
+:root[data-glass-yt="enabled"] ytd-comment-simplebox-renderer:focus-within #contenteditable-root { background: var(--gyt-surface-hover) !important; }
+
+/* Theme-aware logo styles. The SVG remains YouTube's original shape; only
+   its controlled color treatment changes. */
+:root[data-glass-yt="enabled"] #logo-icon,
+:root[data-glass-yt="enabled"] ytd-topbar-logo-renderer yt-icon { filter: var(--gyt-logo-filter) !important; }
+:root[data-glass-yt="enabled"][data-glass-yt-logo="gradient"] #logo { background: linear-gradient(115deg, var(--gyt-primary), var(--gyt-secondary)) !important; }
+:root[data-glass-yt="enabled"][data-glass-yt-logo="glass"] #logo { box-shadow: 0 0 18px var(--gyt-glow), inset 0 1px 0 rgba(255,255,255,.25) !important; }
+
+:root[data-glass-yt="enabled"][data-glass-yt-player="soft"] #player-container-outer.ytd-watch-flexy,
+:root[data-glass-yt="enabled"][data-glass-yt-player="soft"] #player-full-bleed-container.ytd-watch-flexy {
+  box-shadow: 0 12px 30px rgba(0,0,0,var(--gyt-shadow-alpha)) !important;
+}
+:root[data-glass-yt="enabled"][data-glass-yt-player="minimal"] #player-container-outer.ytd-watch-flexy,
+:root[data-glass-yt="enabled"][data-glass-yt-player="minimal"] #player-full-bleed-container.ytd-watch-flexy {
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+:root[data-glass-yt="enabled"][data-glass-yt-card="floating"] :is(ytd-rich-item-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer, ytd-playlist-video-renderer) #dismissible:hover {
+  box-shadow: 0 24px 46px rgba(0,0,0,var(--gyt-shadow-alpha)), 0 0 26px var(--gyt-glow) !important;
+}
+
+:root[data-glass-yt="enabled"][data-glass-yt-gpu] :is(ytd-rich-item-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-grid-video-renderer #thumbnail, #player-container-outer.ytd-watch-flexy) {
+  will-change: transform;
+}
+
+:root[data-glass-yt="enabled"][data-glass-yt-strong-focus] :is(a, button, input, [tabindex]):focus-visible {
+  outline: 3px solid var(--gyt-primary) !important;
+  outline-offset: 3px !important;
+}
+
+/* The native light-theme rules are more specific than YouTube's dark-theme
+   defaults, so mirror the token layer here to keep light mode live-adjustable. */
+:root[data-glass-yt="enabled"]:not([dark]) ytd-masthead#masthead {
+  background: linear-gradient(110deg, var(--gyt-surface-strong), var(--gyt-surface)) !important;
+}
+:root[data-glass-yt="enabled"]:not([dark]) :is(tp-yt-app-drawer#guide, #guide-content.ytd-app, ytd-mini-guide-renderer) {
+  background: linear-gradient(155deg, var(--gyt-surface-strong), var(--gyt-surface)) !important;
+}
+:root[data-glass-yt="enabled"]:not([dark]) #search-form.ytd-searchbox,
+:root[data-glass-yt="enabled"]:not([dark]) #search-form.ytd-searchbox:focus-within {
+  background: var(--gyt-surface) !important;
+}
+:root[data-glass-yt="enabled"]:not([dark]) :is(tp-yt-paper-dialog, ytd-multi-page-menu-renderer, ytd-menu-popup-renderer, ytd-popup-container tp-yt-paper-listbox, ytd-searchbox-suggestions-container) {
+  background: linear-gradient(145deg, var(--gyt-surface-strong), var(--gyt-surface)) !important;
+}
+
+/* 19. Current YouTube component model -----------------------------------
+   YouTube's current homepage uses yt-lockup-view-model and yt-searchbox.
+   These selectors keep the visual system attached after Polymer migrations. */
+:root[data-glass-yt="enabled"] yt-searchbox {
+  border-radius: max(12px, calc(var(--gyt-radius) - 3px));
+}
+
+:root[data-glass-yt="enabled"] :is(.ytSearchboxComponentInputBox, .ytSearchboxComponentInputBoxDark, .ytSearchboxComponentInputBoxLight) {
+  border: 1px solid var(--gyt-border) !important;
+  border-radius: max(12px, calc(var(--gyt-radius) - 3px)) 0 0 max(12px, calc(var(--gyt-radius) - 3px)) !important;
+  background: var(--gyt-surface) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.14) !important;
+  backdrop-filter: blur(var(--gyt-blur-amount)) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(var(--gyt-blur-amount)) saturate(145%) !important;
+}
+
+:root[data-glass-yt="enabled"] .ytSearchboxComponentInput {
+  color: var(--gyt-text, #f5f8ff) !important;
+  caret-color: var(--gyt-primary) !important;
+}
+
+:root[data-glass-yt="enabled"] .ytSearchboxComponentInput::placeholder { color: color-mix(in srgb, var(--gyt-text, #f5f8ff) 58%, transparent) !important; }
+
+:root[data-glass-yt="enabled"] .ytSearchboxComponentSearchButton {
+  border: 1px solid var(--gyt-border) !important;
+  border-left: 0 !important;
+  border-radius: 0 max(12px, calc(var(--gyt-radius) - 3px)) max(12px, calc(var(--gyt-radius) - 3px)) 0 !important;
+  background: var(--gyt-surface-strong) !important;
+  color: var(--gyt-primary) !important;
+  transition: var(--gyt-transition) !important;
+}
+
+:root[data-glass-yt="enabled"] .ytSearchboxComponentSearchButton:hover { background: var(--gyt-surface-hover) !important; box-shadow: 0 0 14px var(--gyt-glow) !important; }
+:root[data-glass-yt="enabled"] .ytSearchboxComponentSuggestionsContainer { border: 1px solid var(--gyt-border) !important; border-radius: var(--gyt-radius) !important; background: var(--gyt-surface-strong) !important; backdrop-filter: blur(calc(var(--gyt-blur-amount) + 8px)) saturate(155%) !important; }
+
+:root[data-glass-yt="enabled"] #logo {
+  display: flex !important;
+  align-items: center !important;
+  height: 44px !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 3px 8px !important;
+  overflow: hidden !important;
+  border-radius: max(10px, calc(var(--gyt-radius) - 6px)) !important;
+}
+
+:root[data-glass-yt="enabled"] #logo-icon { width: 110px !important; height: 38px !important; }
+
+:root[data-glass-yt="enabled"] ytd-feed-filter-chip-bar-renderer {
+  background: transparent !important;
+  border: 0 !important;
+}
+
+:root[data-glass-yt="enabled"] yt-chip-cloud-chip-renderer,
+:root[data-glass-yt="enabled"] yt-chip-cloud-chip-renderer #chip-shape-container,
+:root[data-glass-yt="enabled"] yt-chip-cloud-chip-renderer .ytChipShapeChip {
+  border-radius: 10px !important;
+  background: transparent !important;
+}
+
+:root[data-glass-yt="enabled"] yt-chip-cloud-chip-renderer .ytChipShapeButtonReset {
+  min-height: 34px !important;
+  padding: 0 14px !important;
+  border: 1px solid transparent !important;
+  border-radius: 10px !important;
+  color: var(--gyt-text, #f5f8ff) !important;
+  background: rgba(var(--gyt-primary-rgb), .035) !important;
+  transition: var(--gyt-transition) !important;
+}
+
+:root[data-glass-yt="enabled"] yt-chip-cloud-chip-renderer .ytChipShapeButtonReset:hover {
+  border-color: var(--gyt-border) !important;
+  background: var(--gyt-surface-hover) !important;
+  color: var(--gyt-primary) !important;
+}
+
+:root[data-glass-yt="enabled"] yt-chip-cloud-chip-renderer[selected] .ytChipShapeButtonReset,
+:root[data-glass-yt="enabled"] yt-chip-cloud-chip-renderer .ytChipShapeActive {
+  border-color: var(--gyt-primary) !important;
+  background: var(--gyt-surface-hover) !important;
+  color: var(--gyt-primary-contrast) !important;
+  box-shadow: 0 0 14px var(--gyt-glow), inset 0 1px 0 rgba(255,255,255,.16) !important;
+}
+
+/* New lockup cards: scale the visible host and the thumbnail view model,
+   leaving the grid's flow untouched so neighboring cards never jump. */
+:root[data-glass-yt="enabled"] ytd-rich-item-renderer .ytLockupViewModelHost {
+  position: relative !important;
+  z-index: 0;
+  border: 1px solid transparent;
+  border-radius: max(12px, calc(var(--gyt-radius) - 2px));
+  background: transparent;
+  transform-origin: center bottom;
+  transition: var(--gyt-transition) !important;
+}
+
+:root[data-glass-yt="enabled"] ytd-rich-item-renderer:hover .ytLockupViewModelHost {
+  z-index: 4;
+  border-color: var(--gyt-border) !important;
+  background: linear-gradient(145deg, var(--gyt-surface-hover), transparent 76%) !important;
+  box-shadow: 0 18px 38px rgba(0,0,0,var(--gyt-shadow-alpha)), 0 0 20px var(--gyt-glow) !important;
+  transform: translateY(calc(-1 * var(--gyt-card-lift))) scale(var(--gyt-card-scale)) !important;
+}
+
+:root[data-glass-yt="enabled"] ytd-rich-item-renderer yt-thumbnail-view-model {
+  display: block !important;
+  overflow: hidden !important;
+  border: 1px solid var(--gyt-border) !important;
+  border-radius: max(12px, calc(var(--gyt-radius) + 1px)) !important;
+  transition: transform 300ms cubic-bezier(.2,.8,.2,1), box-shadow var(--gyt-animation-duration) ease, border-color var(--gyt-animation-duration) ease !important;
+}
+
+:root[data-glass-yt="enabled"][data-glass-yt-hover] ytd-rich-item-renderer:hover yt-thumbnail-view-model {
+  border-color: var(--gyt-primary) !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,var(--gyt-shadow-alpha)), 0 0 18px var(--gyt-glow) !important;
+  transform: scale(1.035) !important;
+}
+
+:root[data-glass-yt="enabled"] ytd-rich-item-renderer .ytSpecTouchFeedbackShapeHoverEffect,
+:root[data-glass-yt="enabled"] ytd-rich-item-renderer .ytSpecTouchFeedbackShapeStroke,
+:root[data-glass-yt="enabled"] ytd-rich-item-renderer .ytSpecTouchFeedbackShapeFill {
+  border-radius: inherit !important;
+  background: var(--gyt-surface-hover) !important;
+  border-color: var(--gyt-border) !important;
+}
+
+:root[data-glass-yt="enabled"] ytd-rich-item-renderer .ytLockupViewModelMetadata { transition: color var(--gyt-animation-duration) ease, filter var(--gyt-animation-duration) ease; }
+:root[data-glass-yt="enabled"] ytd-rich-item-renderer:hover .ytLockupViewModelMetadata { filter: brightness(1.10); }
+
+:root[data-glass-yt="enabled"] ytd-mini-guide-renderer .title {
+  width: 100% !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+  display: block !important;
+  font-size: 8px !important;
+  letter-spacing: -.38px !important;
+  text-indent: -1px !important;
+}
+
+:root[data-glass-yt="enabled"] ytd-mini-guide-entry-renderer #endpoint {
+  overflow: visible !important;
+  border-radius: 11px !important;
+}
+
+/* Reflection is one small moving highlight, never an RGB overlay. */
+:root[data-glass-yt="enabled"][data-glass-yt-reflection] :is(ytd-masthead#masthead, #guide-content.ytd-app, ytd-mini-guide-renderer, ytd-c4-tabbed-header-renderer, ytd-playlist-header-renderer, ytd-playlist-panel-renderer)::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  opacity: var(--gyt-reflection-opacity);
+  border-radius: inherit;
+  background: linear-gradient(112deg, transparent 28%, rgba(255,255,255,.32) 46%, transparent 62%);
+  transform: translateX(-110%);
+  animation: gyt-liquid-reflection var(--gyt-reflection-duration) ease-in-out infinite;
+}
+
+@keyframes gyt-liquid-reflection { 0%, 45% { transform: translateX(-110%); } 100% { transform: translateX(110%); } }
+
+:root[data-glass-yt="enabled"][data-glass-yt-high-contrast] :is(#video-title, #channel-name, #author-text, #content-text, yt-formatted-string) { text-shadow: 0 1px 2px rgba(0,0,0,.30); }
+:root[data-glass-yt="enabled"][data-glass-yt-high-contrast] :is(a, button, input, [tabindex]):focus-visible { outline: 3px solid var(--gyt-primary) !important; outline-offset: 3px !important; }
+:root[data-glass-yt="enabled"][data-glass-yt-reduced-motion] *,
+:root[data-glass-yt="enabled"][data-glass-yt-reduced-motion] *::before,
+:root[data-glass-yt="enabled"][data-glass-yt-reduced-motion] *::after { animation: none !important; transition-duration: 0ms !important; }
+
+/* 20. Flattened liquid surfaces ----------------------------------------
+   YouTube nests several shape components inside chips and suggestions. A
+   single surface owns the glass treatment; inner wrappers must stay clear so
+   the result reads as liquid glass instead of stacked rounded rectangles. */
+:root[data-glass-yt="enabled"] .ytSearchboxComponentSuggestionsContainer {
+  overflow: hidden !important;
+  border: 1px solid var(--gyt-border) !important;
+  border-radius: max(14px, var(--gyt-radius)) !important;
+  background: var(--gyt-surface-strong) !important;
+  box-shadow: 0 20px 42px rgba(0,0,0,var(--gyt-shadow-alpha)), inset 0 1px 0 rgba(255,255,255,.16) !important;
+  backdrop-filter: blur(calc(var(--gyt-blur-amount) + 10px)) saturate(155%) !important;
+  -webkit-backdrop-filter: blur(calc(var(--gyt-blur-amount) + 10px)) saturate(155%) !important;
+}
+:root[data-glass-yt="enabled"] .ytSearchboxComponentSuggestionsContainer :is(yt-searchbox-suggestion, .ytSearchboxComponentSuggestion, [role="option"], .ytSuggestionComponent) {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+:root[data-glass-yt="enabled"] .ytSearchboxComponentSuggestionsContainer :is(yt-searchbox-suggestion, .ytSearchboxComponentSuggestion, [role="option"], .ytSuggestionComponent):hover {
+  background: var(--gyt-surface-hover) !important;
+  color: var(--gyt-primary) !important;
+}
+
+:root[data-glass-yt="enabled"] :is(yt-chip-cloud-chip-renderer, yt-chip-cloud-chip-renderer #chip-shape-container, yt-chip-cloud-chip-renderer .ytChipShapeChip, yt-chip-cloud-chip-renderer .ytChipShapeButtonReset) {
+  box-shadow: none !important;
+}
+:root[data-glass-yt="enabled"][data-glass-yt-chip="minimal"] :is(yt-chip-cloud-chip-renderer, yt-chip-cloud-chip-renderer #chip-shape-container, yt-chip-cloud-chip-renderer .ytChipShapeChip) {
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+:root[data-glass-yt="enabled"][data-glass-yt-chip="minimal"] yt-chip-cloud-chip-renderer .ytChipShapeButtonReset {
+  position: relative !important;
+  min-height: 36px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--gyt-text, #f5f8ff) !important;
+}
+:root[data-glass-yt="enabled"][data-glass-yt-chip="minimal"] yt-chip-cloud-chip-renderer .ytChipShapeButtonReset::after {
+  position: absolute;
+  right: 14px;
+  bottom: 3px;
+  left: 14px;
+  height: 2px;
+  content: "";
+  background: transparent;
+  transition: background-color var(--gyt-animation-duration) ease, transform var(--gyt-animation-duration) ease;
+}
+:root[data-glass-yt="enabled"][data-glass-yt-chip="minimal"] yt-chip-cloud-chip-renderer:hover .ytChipShapeButtonReset { color: var(--gyt-primary) !important; }
+:root[data-glass-yt="enabled"][data-glass-yt-chip="minimal"] yt-chip-cloud-chip-renderer[selected] .ytChipShapeButtonReset { color: var(--gyt-primary-contrast) !important; }
+:root[data-glass-yt="enabled"][data-glass-yt-chip="minimal"] yt-chip-cloud-chip-renderer[selected] .ytChipShapeButtonReset::after { background: var(--gyt-primary) !important; }
+:root[data-glass-yt="enabled"][data-glass-yt-chip="soft"] yt-chip-cloud-chip-renderer .ytChipShapeButtonReset {
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: rgba(var(--gyt-primary-rgb), .07) !important;
+}
+:root[data-glass-yt="enabled"][data-glass-yt-chip="glass"] yt-chip-cloud-chip-renderer .ytChipShapeButtonReset {
+  border: 1px solid var(--gyt-border) !important;
+  border-radius: 999px !important;
+  background: var(--gyt-surface) !important;
+  backdrop-filter: blur(var(--gyt-blur-amount)) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(var(--gyt-blur-amount)) saturate(150%) !important;
+}
+
+/* Keep the logo itself clean; its color is supplied by the theme filter, not
+   a second rounded tile behind the SVG. */
+:root[data-glass-yt="enabled"] #logo {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 6px !important;
+}
+
+/* Persistent mac-dock-like hover: the state is driven by :hover only, so it
+   cannot pulse out while the pointer remains over the card. */
+:root[data-glass-yt="enabled"] ytd-rich-item-renderer,
+:root[data-glass-yt="enabled"] ytd-rich-item-renderer #content,
+:root[data-glass-yt="enabled"] ytd-rich-item-renderer .ytLockupViewModelHost {
+  overflow: visible !important;
+}
+:root[data-glass-yt="enabled"] ytd-rich-item-renderer .ytLockupViewModelHost {
+  will-change: transform, box-shadow;
+  transition: transform 280ms cubic-bezier(.22, 1, .36, 1), box-shadow 280ms cubic-bezier(.22, 1, .36, 1), border-color 280ms ease, background-color 280ms ease !important;
+  transition-delay: 0ms !important;
+}
+:root[data-glass-yt="enabled"] ytd-rich-item-renderer:hover .ytLockupViewModelHost {
+  transform: translate3d(0, calc(-1 * var(--gyt-card-lift)), 0) scale(var(--gyt-card-scale)) !important;
+}
+:root[data-glass-yt="enabled"] ytd-rich-item-renderer yt-thumbnail-view-model,
+:root[data-glass-yt="enabled"] ytd-rich-item-renderer yt-thumbnail-view-model img {
+  transition: transform 280ms cubic-bezier(.22, 1, .36, 1), filter 280ms ease, box-shadow 280ms ease !important;
+}
+:root[data-glass-yt="enabled"][data-glass-yt-hover] ytd-rich-item-renderer:hover yt-thumbnail-view-model img {
+  transform: scale(1.045) !important;
+  filter: saturate(1.06) contrast(1.02) !important;
+}
+:root[data-glass-yt="enabled"] ytd-rich-item-renderer :is(yt-touch-feedback-shape, .yt-spec-touch-feedback-shape, .ytSpecTouchFeedbackShapeHoverEffect) {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Keep the masthead glass tokenized across navigation and comment scroll. */
+:root[data-glass-yt="enabled"] :is(ytd-masthead#masthead, #masthead-container, ytd-app #content) {
+  --yt-spec-base-background: transparent !important;
+}
+:root[data-glass-yt="enabled"] ytd-masthead#masthead,
+:root[data-glass-yt="enabled"] #masthead-container {
+  background: linear-gradient(110deg, var(--gyt-surface-strong), var(--gyt-surface)) !important;
+  backdrop-filter: blur(var(--gyt-blur-amount)) saturate(155%) !important;
+  -webkit-backdrop-filter: blur(var(--gyt-blur-amount)) saturate(155%) !important;
+}
+
+/* 21. Glass YT v2.0 surface + interaction repairs ---------------------- */
+:root[data-glass-yt="enabled"],
+:root[data-glass-yt="enabled"] body,
+:root[data-glass-yt="enabled"] ytd-app,
+:root[data-glass-yt="enabled"] #content.ytd-app,
+:root[data-glass-yt="enabled"] #page-manager.ytd-app {
+  color: var(--gyt-text, #f5f8ff) !important;
+  background:
+    radial-gradient(900px 560px at 8% -12%, var(--gyt-glow), transparent 68%),
+    radial-gradient(780px 520px at 96% 108%, rgba(var(--gyt-primary-rgb), .08), transparent 70%),
+    #0c111b !important;
+}
+:root[data-glass-yt="enabled"] ytd-browse,
+:root[data-glass-yt="enabled"] ytd-page-manager,
+:root[data-glass-yt="enabled"] ytd-two-column-browse-results-renderer,
+:root[data-glass-yt="enabled"] #contents.ytd-rich-grid-renderer {
+  background: transparent !important;
+}
+
+/* A single rounded hover surface owns the sidebar/Shorts/subscriptions
+   treatment. Icons, labels, and Polymer wrappers remain transparent. */
+:root[data-glass-yt="enabled"] :is(ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer) :is(#endpoint, a, yt-icon, yt-formatted-string, .title, .yt-lockup-metadata-view-model) {
+  box-shadow: none !important;
+  background: transparent !important;
+  border-color: transparent !important;
+}
+:root[data-glass-yt="enabled"] :is(ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer) #endpoint {
+  position: relative !important;
+  z-index: 0 !important;
+  overflow: visible !important;
+  border: 1px solid transparent !important;
+  border-radius: max(12px, calc(var(--gyt-radius) - 4px)) !important;
+  transition: background-color 220ms ease, border-color 220ms ease, box-shadow 220ms ease !important;
+}
+:root[data-glass-yt="enabled"] :is(ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer) #endpoint:hover,
+:root[data-glass-yt="enabled"] :is(ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer)[active] #endpoint {
+  z-index: 1 !important;
+  border-color: var(--gyt-border) !important;
+  background: var(--gyt-surface-hover) !important;
+  box-shadow: 0 8px 18px rgba(0,0,0,var(--gyt-shadow-alpha)) !important;
+}
+
+/* Keep the current chip row in the hit-test area while it is highlighted;
+   YouTube's native shape wrappers must not clip or move the suggestion away. */
+:root[data-glass-yt="enabled"] :is(ytd-feed-filter-chip-bar-renderer, yt-chip-cloud-renderer, yt-chip-cloud-chip-renderer, .ytChipShapeButtonReset) {
+  overflow: visible !important;
+}
+:root[data-glass-yt="enabled"] yt-chip-cloud-chip-renderer:hover,
+:root[data-glass-yt="enabled"] yt-chip-cloud-chip-renderer[selected] {
+  position: relative !important;
+  z-index: 3 !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+:root[data-glass-yt="enabled"] yt-chip-cloud-chip-renderer:hover .ytChipShapeButtonReset,
+:root[data-glass-yt="enabled"] yt-chip-cloud-chip-renderer[selected] .ytChipShapeButtonReset {
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+/* The logo is themed by its filter only; never paint a second tile behind it. */
+:root[data-glass-yt="enabled"] :is(#logo, #logo.ytd-topbar-logo-renderer),
+:root[data-glass-yt="enabled"][data-glass-yt-logo="gradient"] #logo,
+:root[data-glass-yt="enabled"][data-glass-yt-logo="glass"] #logo {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Reflection stays available, but the moving glow is explicitly opt-in. */
+:root[data-glass-yt="enabled"][data-glass-yt-reflection] :is(ytd-masthead#masthead, #guide-content.ytd-app, ytd-mini-guide-renderer, ytd-c4-tabbed-header-renderer, ytd-playlist-header-renderer, ytd-playlist-panel-renderer)::after {
+  animation: none !important;
+  transform: translateX(0) !important;
+}
+:root[data-glass-yt="enabled"][data-glass-yt-reflection][data-glass-yt-animated-glow] :is(ytd-masthead#masthead, #guide-content.ytd-app, ytd-mini-guide-renderer, ytd-c4-tabbed-header-renderer, ytd-playlist-header-renderer, ytd-playlist-panel-renderer)::after {
+  animation: gyt-liquid-reflection var(--gyt-reflection-duration) ease-in-out infinite !important;
+}
+
+/* Keep the card zoom attached to the whole pointer target. This prevents a
+   native preview swap from dropping the hover state while the cursor stays
+   over the same card. */
+:root[data-glass-yt="enabled"] ytd-rich-item-renderer,
+:root[data-glass-yt="enabled"] ytd-rich-item-renderer:has(.ytLockupViewModelHost:hover) {
+  overflow: visible !important;
+}
+:root[data-glass-yt="enabled"] ytd-rich-item-renderer:hover .ytLockupViewModelHost,
+:root[data-glass-yt="enabled"] ytd-rich-item-renderer:has(.ytLockupViewModelHost:hover) .ytLockupViewModelHost {
+  transform: translate3d(0, calc(-1 * var(--gyt-card-lift)), 0) scale(var(--gyt-card-scale)) !important;
+  transition: transform 280ms cubic-bezier(.22, 1, .36, 1), box-shadow 280ms cubic-bezier(.22, 1, .36, 1), border-color 280ms ease !important;
+}
+
+/* YouTube promotes the playing thumbnail into a global preview overlay. Keep
+   that video in the same liquid-zoom state instead of leaving only the still
+   image enlarged. */
+:root[data-glass-yt="enabled"][data-glass-yt-hover] :is(#video-preview, ytd-video-preview, ytd-video-preview #player-container, ytd-video-preview #inline-player) {
+  overflow: visible !important;
+  border-radius: max(12px, calc(var(--gyt-radius) + 1px)) !important;
+  transition: transform 280ms cubic-bezier(.22, 1, .36, 1), box-shadow 280ms cubic-bezier(.22, 1, .36, 1), opacity 180ms ease !important;
+}
+:root[data-glass-yt="enabled"][data-glass-yt-hover] ytd-video-preview #player-container,
+:root[data-glass-yt="enabled"][data-glass-yt-hover] ytd-video-preview #inline-player {
+  transform: scale(var(--gyt-card-scale)) !important;
+  transform-origin: center center !important;
+  border: 1px solid var(--gyt-primary) !important;
+  box-shadow: 0 18px 38px rgba(0,0,0,var(--gyt-shadow-alpha)), 0 0 20px var(--gyt-glow) !important;
+}
+
+/* Compact header: a 52px masthead and a play-only circular logo. The native
+   SVG is 93 units wide; the 29-unit play group is intentionally cropped. */
+:root[data-glass-yt="enabled"] :is(ytd-masthead#masthead, #masthead-container) {
+  min-height: 52px !important;
+  height: 52px !important;
+}
+:root[data-glass-yt="enabled"] yt-searchbox {
+  height: 34px !important;
+  min-height: 34px !important;
+}
+:root[data-glass-yt="enabled"] :is(.ytSearchboxComponentInputBox, .ytSearchboxComponentSearchButton) {
+  height: 34px !important;
+  min-height: 34px !important;
+}
+:root[data-glass-yt="enabled"] ytd-topbar-logo-renderer#logo {
+  width: 42px !important;
+  min-width: 42px !important;
+  height: 42px !important;
+  overflow: visible !important;
+}
+:root[data-glass-yt="enabled"] ytd-topbar-logo-renderer#logo > a#logo {
+  display: flex !important;
+  width: 42px !important;
+  min-width: 42px !important;
+  height: 42px !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  border: 1px solid var(--gyt-border) !important;
+  border-radius: 50% !important;
+  background: var(--gyt-surface) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 8px 18px rgba(0,0,0,var(--gyt-shadow-alpha)) !important;
+  backdrop-filter: blur(var(--gyt-blur-amount)) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(var(--gyt-blur-amount)) saturate(150%) !important;
+}
+:root[data-glass-yt="enabled"] ytd-topbar-logo-renderer#logo > a#logo > div,
+:root[data-glass-yt="enabled"] ytd-topbar-logo-renderer#logo ytd-logo,
+:root[data-glass-yt="enabled"] ytd-topbar-logo-renderer#logo #logo-icon {
+  width: 136px !important;
+  min-width: 136px !important;
+  height: 29px !important;
+  flex: 0 0 136px !important;
+  transform: translateX(0) !important;
+}
+:root[data-glass-yt="enabled"] ytd-topbar-logo-renderer#logo #logo-icon svg {
+  width: 136px !important;
+  height: 29px !important;
+}
+
+/* YouTube's late masthead-finish rules are highly specific; keep the v2
+   compact treatment winning after those rules are injected. */
+html:root[data-glass-yt="enabled"][data-glass-yt-theme][data-glass-yt-logo] ytd-topbar-logo-renderer#logo {
+  flex: 0 0 42px !important;
+  width: 42px !important;
+  min-width: 42px !important;
+  max-width: 42px !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
+  overflow: hidden !important;
+  margin-right: 0 !important;
+}
+html:root[data-glass-yt="enabled"][data-glass-yt-theme][data-glass-yt-logo] ytd-topbar-logo-renderer#logo > a#logo {
+  flex: 0 0 42px !important;
+  width: 42px !important;
+  min-width: 42px !important;
+  max-width: 42px !important;
+  height: 42px !important;
+  overflow: hidden !important;
+  border-radius: 50% !important;
+}
+html:root[data-glass-yt="enabled"][data-glass-yt-theme][data-glass-yt-logo] ytd-topbar-logo-renderer#logo #logo-icon,
+html:root[data-glass-yt="enabled"][data-glass-yt-theme][data-glass-yt-logo] ytd-topbar-logo-renderer#logo #logo-icon svg {
+  width: 136px !important;
+  min-width: 136px !important;
+  height: 29px !important;
+  max-width: none !important;
+  flex: 0 0 136px !important;
+}
+html:root[data-glass-yt="enabled"][data-glass-yt-theme] yt-searchbox {
+  transform: scaleY(.86) !important;
+  transform-origin: center center !important;
+}
+html:root[data-glass-yt="enabled"][data-glass-yt-theme] ytd-masthead#masthead {
+  background: linear-gradient(110deg, var(--gyt-surface-strong), var(--gyt-surface)) !important;
+}
+html:root[data-glass-yt="enabled"][data-glass-yt-theme][data-glass-yt-logo] #masthead-container.ytd-app {
+  height: 60px !important;
+  min-height: 60px !important;
+  max-height: 60px !important;
+}
+html:root[data-glass-yt="enabled"][data-glass-yt-theme][data-glass-yt-logo] ytd-masthead#masthead {
+  height: 52px !important;
+  min-height: 52px !important;
+  max-height: 52px !important;
+}
+
+/* 22. Final visual corrections */
+html:root[data-glass-yt="enabled"][data-glass-yt-theme][data-glass-yt-logo] #masthead-container.ytd-app {
+  height: 65.6px !important;
+  min-height: 65.6px !important;
+  max-height: none !important;
+}
+html:root[data-glass-yt="enabled"][data-glass-yt-theme][data-glass-yt-logo] ytd-masthead#masthead {
+  height: 57.6px !important;
+  min-height: 57.6px !important;
+  max-height: none !important;
+}
+html:root[data-glass-yt="enabled"][data-glass-yt-theme][data-glass-yt-logo] yt-searchbox,
+html:root[data-glass-yt="enabled"][data-glass-yt-theme][data-glass-yt-logo] .ytSearchboxComponentInputBox,
+html:root[data-glass-yt="enabled"][data-glass-yt-theme][data-glass-yt-logo] .ytSearchboxComponentSearchButton {
+  transform: none !important;
+  height: 40px !important;
+  min-height: 40px !important;
+}
+
+/* Hide the redundant submit button; keyboard Enter still searches. */
+html:root[data-glass-yt="enabled"] .ytSearchboxComponentSearchButton,
+html:root[data-glass-yt="enabled"] #search-icon-legacy {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+html:root[data-glass-yt="enabled"] .ytSearchboxComponentInputBox {
+  border-radius: 999px !important;
+  padding-right: 14px !important;
+}
+
+/* Use the actual extension mark in one translucent circular logo surface. */
+html:root[data-glass-yt="enabled"][data-glass-yt-theme] ytd-topbar-logo-renderer#logo {
+  flex: 0 0 48px !important;
+  width: 48px !important;
+  min-width: 48px !important;
+  max-width: 48px !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  margin: 0 14px 0 6px !important;
+  overflow: visible !important;
+}
+html:root[data-glass-yt="enabled"][data-glass-yt-theme] ytd-topbar-logo-renderer#logo > a#logo {
+  position: relative !important;
+  display: block !important;
+  width: 48px !important;
+  min-width: 48px !important;
+  height: 48px !important;
+  overflow: hidden !important;
+  border: 1px solid var(--gyt-border) !important;
+  border-radius: 50% !important;
+  background: var(--gyt-surface) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 8px 18px rgba(0,0,0,var(--gyt-shadow-alpha)) !important;
+  backdrop-filter: blur(var(--gyt-blur-amount)) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(var(--gyt-blur-amount)) saturate(150%) !important;
+}
+html:root[data-glass-yt="enabled"][data-glass-yt-theme] ytd-topbar-logo-renderer#logo > a#logo::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 3px !important;
+  z-index: 2 !important;
+  border-radius: 50% !important;
+  background: var(--gyt-extension-icon) center / cover no-repeat !important;
+  filter: saturate(.9) brightness(1.08) !important;
+}
+html:root[data-glass-yt="enabled"][data-glass-yt-theme] ytd-topbar-logo-renderer#logo > a#logo > div,
+html:root[data-glass-yt="enabled"][data-glass-yt-theme] ytd-topbar-logo-renderer#logo ytd-logo,
+html:root[data-glass-yt="enabled"][data-glass-yt-theme] ytd-topbar-logo-renderer#logo #logo-icon {
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* Make the entire YouTube canvas a transparent liquid-glass surface. */
+html:root[data-glass-yt="enabled"],
+html:root[data-glass-yt="enabled"] body,
+html:root[data-glass-yt="enabled"] ytd-app,
+html:root[data-glass-yt="enabled"] #content.ytd-app,
+html:root[data-glass-yt="enabled"] #page-manager.ytd-app {
+  background-color: transparent !important;
+  background-image: radial-gradient(900px 560px at 8% -12%, var(--gyt-glow), transparent 68%), radial-gradient(780px 520px at 96% 108%, rgba(var(--gyt-primary-rgb), .08), transparent 70%) !important;
+  --yt-spec-base-background: transparent !important;
+  --yt-spec-general-background-a: transparent !important;
+  --yt-spec-general-background-b: transparent !important;
+  --yt-spec-raised-background: var(--gyt-surface) !important;
+}
+
+/* Zoom is removed everywhere, including inline previews and Shorts. */
+html:root[data-glass-yt="enabled"] :is(ytd-rich-item-renderer:hover .ytLockupViewModelHost, ytd-rich-item-renderer:has(.ytLockupViewModelHost:hover) .ytLockupViewModelHost, #video-preview, ytd-video-preview, ytd-video-preview #player-container, ytd-video-preview #inline-player) {
+  transform: none !important;
+  filter: none !important;
+}
+html:root[data-glass-yt="enabled"] :is(ytd-reel-video-renderer video, ytd-shorts video, ytd-shorts-player video, #shorts-player video) {
+  filter: none !important;
+  opacity: 1 !important;
+}
+/* Keep the actual Shorts frame crisp even when glass is enabled around it. */
+html:root[data-glass-yt="enabled"] :is(ytd-reel-video-renderer, ytd-reel-video-renderer #player-container, ytd-reel-video-renderer #player, ytd-shorts, ytd-shorts-player, #shorts-player, #shorts-inner-container, #shorts-player-container) {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+}
+
+/* A tinted transparent canvas prevents YouTube's light-mode white from
+   becoming the page background while retaining the liquid-glass depth. */
+html:root[data-glass-yt="enabled"],
+html:root[data-glass-yt="enabled"] body,
+html:root[data-glass-yt="enabled"] ytd-app,
+html:root[data-glass-yt="enabled"] #content.ytd-app,
+html:root[data-glass-yt="enabled"] #page-manager.ytd-app {
+  background-color: rgba(12, 20, 36, .34) !important;
+  background-image: radial-gradient(900px 560px at 8% -12%, var(--gyt-glow), transparent 68%), radial-gradient(780px 520px at 96% 108%, rgba(var(--gyt-primary-rgb), .10), transparent 70%), linear-gradient(145deg, rgba(var(--gyt-primary-rgb), .06), rgba(7, 12, 23, .14)) !important;
+  background-attachment: fixed !important;
+}
+html:root[data-glass-yt="enabled"] :is(ytd-browse, ytd-page-manager, ytd-two-column-browse-results-renderer, ytd-rich-grid-renderer, #contents.ytd-rich-grid-renderer, #primary, #secondary, #columns, #page-manager) {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* 23. v2.5 — intentional glass surfaces only --------------------------- */
+/* Videos, thumbnails, text and controls are content. Keep each one sharp. */
+html:root[data-glass-yt="enabled"] :is(video, img, canvas, yt-formatted-string, #video-title, #channel-name, #author-text, #content-text, .ytLockupViewModelMetadata) {
+  filter: none !important;
+  -webkit-filter: none !important;
+}
+html:root[data-glass-yt="enabled"] :is(video, img, canvas) {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* One broad, rounded masthead pill. Its blur affects only the scene behind it. */
+html:root[data-glass-yt="enabled"] ytd-masthead#masthead {
+  margin: 8px 12px 0 !important;
+  width: calc(100% - 24px) !important;
+  border: 1px solid var(--gyt-border) !important;
+  border-radius: 999px !important;
+  background: linear-gradient(105deg, var(--gyt-surface-strong), var(--gyt-surface)) !important;
+  box-shadow: 0 12px 30px rgba(0,0,0,var(--gyt-shadow-alpha)), inset 0 1px 0 rgba(255,255,255,.22) !important;
+  backdrop-filter: blur(var(--gyt-blur-amount)) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(var(--gyt-blur-amount)) saturate(145%) !important;
+}
+html:root[data-glass-yt="enabled"] #masthead-container.ytd-app {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Remove the full-page drawer slab; the actual navigation is the one pill. */
+html:root[data-glass-yt="enabled"] tp-yt-app-drawer#guide {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html:root[data-glass-yt="enabled"] #guide-content.ytd-app {
+  margin: 68px 12px 12px !important;
+  height: calc(100vh - 80px) !important;
+  border: 1px solid var(--gyt-border) !important;
+  border-radius: 28px !important;
+  background: linear-gradient(155deg, var(--gyt-surface-strong), var(--gyt-surface)) !important;
+  box-shadow: 0 12px 30px rgba(0,0,0,var(--gyt-shadow-alpha)), inset 0 1px 0 rgba(255,255,255,.18) !important;
+  backdrop-filter: blur(var(--gyt-blur-amount)) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(var(--gyt-blur-amount)) saturate(145%) !important;
+}
+html:root[data-glass-yt="enabled"] ytd-mini-guide-renderer {
+  margin: 12px 0 12px 12px !important;
+  height: calc(100vh - 80px) !important;
+  border: 1px solid var(--gyt-border) !important;
+  border-radius: 28px !important;
+  background: linear-gradient(155deg, var(--gyt-surface-strong), var(--gyt-surface)) !important;
+  box-shadow: 0 12px 30px rgba(0,0,0,var(--gyt-shadow-alpha)), inset 0 1px 0 rgba(255,255,255,.18) !important;
+  backdrop-filter: blur(var(--gyt-blur-amount)) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(var(--gyt-blur-amount)) saturate(145%) !important;
+}
+
+/* Clear accidental left/right content slabs rather than tinting them. */
+html:root[data-glass-yt="enabled"] :is(#primary, #secondary, #secondary-inner, #related, #panels, #columns, #page-manager, ytd-two-column-browse-results-renderer)::before,
+html:root[data-glass-yt="enabled"] :is(#primary, #secondary, #secondary-inner, #related, #panels, #columns, #page-manager, ytd-two-column-browse-results-renderer)::after {
+  content: none !important;
+}
+html:root[data-glass-yt="enabled"] :is(#primary, #secondary, #secondary-inner, #related, #panels, #columns) {
+  border-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Category controls are a single glass pill, never a nested rectangle. */
+html:root[data-glass-yt="enabled"] :is(yt-chip-cloud-chip-renderer, yt-chip-cloud-chip-renderer #chip-shape-container, yt-chip-cloud-chip-renderer .ytChipShapeChip) {
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+html:root[data-glass-yt="enabled"] yt-chip-cloud-chip-renderer .ytChipShapeButtonReset {
+  min-height: 36px !important;
+  padding-inline: 15px !important;
+  border: 1px solid var(--gyt-border) !important;
+  border-radius: 999px !important;
+  color: var(--gyt-text) !important;
+  background: var(--gyt-surface) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.16) !important;
+  backdrop-filter: blur(calc(var(--gyt-blur-amount) * .62)) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(calc(var(--gyt-blur-amount) * .62)) saturate(130%) !important;
+  transition: background-color 190ms ease, border-color 190ms ease, box-shadow 190ms ease !important;
+}
+html:root[data-glass-yt="enabled"] yt-chip-cloud-chip-renderer:hover .ytChipShapeButtonReset {
+  border-color: color-mix(in srgb, var(--gyt-border) 70%, white) !important;
+  background: var(--gyt-surface-hover) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.24) !important;
+}
+html:root[data-glass-yt="enabled"] yt-chip-cloud-chip-renderer[selected] .ytChipShapeButtonReset,
+html:root[data-glass-yt="enabled"] yt-chip-cloud-chip-renderer .ytChipShapeActive {
+  border-color: var(--gyt-border) !important;
+  color: var(--gyt-text) !important;
+  background: var(--gyt-surface-hover) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.28) !important;
+}
+
+/* One calm hover state covers the full video item, with no thumbnail zoom. */
+html:root[data-glass-yt="enabled"] :is(ytd-rich-item-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer, ytd-playlist-video-renderer) :is(#dismissible, .ytLockupViewModelHost) {
+  will-change: auto !important;
+  transition: transform 190ms ease, background-color 190ms ease, border-color 190ms ease, box-shadow 190ms ease !important;
+}
+html:root[data-glass-yt="enabled"][data-glass-yt-hover] :is(ytd-rich-item-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer, ytd-playlist-video-renderer):hover :is(#dismissible, .ytLockupViewModelHost) {
+  border-color: var(--gyt-border) !important;
+  background: linear-gradient(145deg, var(--gyt-surface-hover), transparent 78%) !important;
+  box-shadow: 0 12px 25px rgba(0,0,0,var(--gyt-shadow-alpha)), inset 0 1px 0 rgba(255,255,255,.13) !important;
+  transform: translateY(-2px) !important;
+}
+html:root[data-glass-yt="enabled"] :is(ytd-rich-item-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer, ytd-playlist-video-renderer) :is(#thumbnail, yt-thumbnail-view-model, #thumbnail img, yt-thumbnail-view-model img) {
+  transform: none !important;
+  filter: none !important;
+}
+html:root[data-glass-yt="enabled"] :is(ytd-rich-item-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer) :is(#thumbnail, a#thumbnail)::after {
+  content: none !important;
+}
+
+/* Search stays glass-like but never gains a cyan hover or focus rectangle. */
+html:root[data-glass-yt="enabled"] :is(#search-form.ytd-searchbox, .ytSearchboxComponentInputBox, .ytSearchboxComponentInputBoxDark, .ytSearchboxComponentInputBoxLight):is(:hover, :focus, :focus-within, :focus-visible) {
+  outline: none !important;
+  border-color: var(--gyt-border) !important;
+  background: var(--gyt-surface) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 4px 18px rgba(0,0,0,var(--gyt-shadow-alpha)) !important;
+}
+html:root[data-glass-yt="enabled"] .ytSearchboxComponentInput:focus,
+html:root[data-glass-yt="enabled"] .ytSearchboxComponentInput:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Keep the microphone and the hard-to-see globe/network icons crisp white. */
+html:root[data-glass-yt="enabled"] :is(#voice-search-button, #voice-search-button button, #voice-search-button yt-icon, #voice-search-button svg, #voice-search-button path, yt-icon[icon*="globe" i], iron-icon[icon*="globe" i], [aria-label*="Globe" i] svg, [aria-label*="Network" i] svg) {
+  color: #fff !important;
+  fill: #fff !important;
+  stroke: #fff !important;
+  filter: none !important;
+}
+html:root[data-glass-yt="enabled"] :is(#voice-search-button, [aria-label*="Globe" i], [aria-label*="Network" i]):is(:hover, :focus-visible) {
+  color: #fff !important;
+  background: rgba(255,255,255,.10) !important;
+}
+
+/* Shorts retain YouTube's own 9:16 geometry; only surrounding UI may be glass. */
+html:root[data-glass-yt="enabled"] :is(ytd-reel-video-renderer, ytd-shorts, ytd-shorts-player, #shorts-player, #shorts-inner-container, #shorts-player-container, ytd-reel-player-overlay-renderer, ytd-reel-video-renderer #overlay) {
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html:root[data-glass-yt="enabled"] :is(ytd-reel-video-renderer video, ytd-shorts video, ytd-shorts-player video, #shorts-player video) {
+  object-fit: contain !important;
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html:root[data-glass-yt="enabled"] :is(ytd-reel-player-overlay-renderer, ytd-reel-video-renderer #overlay)::before,
+html:root[data-glass-yt="enabled"] :is(ytd-reel-player-overlay-renderer, ytd-reel-video-renderer #overlay)::after {
+  content: none !important;
+}
+
+/* A light, event-driven ad blocker: hide known slots and use YouTube's
+   existing skip control when it appears. No polling or page-wide scanning. */
+html:root[data-glass-yt="enabled"][data-glass-yt-ad-blocker] :is(ytd-ad-slot-renderer, ytd-in-feed-ad-layout-renderer, ytd-promoted-sparkles-web-renderer, ytd-display-ad-renderer, ytd-companion-slot-renderer, ytd-action-companion-ad-renderer, #player-ads, .ytp-ad-overlay-container) {
+  display: none !important;
+}
